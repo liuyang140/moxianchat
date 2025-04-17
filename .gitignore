@@ -1,0 +1,54 @@
+# === Java / Spring Boot ===
+*.class
+*.jar
+*.war
+*.ear
+target/
+out/
+
+# === Maven / Gradle ===
+.mvn/
+.gradle/
+build/
+
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# === VS Code ===
+.vscode/
+
+# === Node.js / React 前端 ===
+node_modules/
+dist/
+build/
+
+# === 日志文件 ===
+*.log
+logs/
+*.pid
+
+# === 环境变量文件（敏感信息） ===
+.env
+.env.*
+
+# === Mac 系统文件 ===
+.DS_Store
+
+# === 临时文件 ===
+*.swp
+*.bak
+*.tmp
+~$*
+
+# === 操作系统生成的文件 ===
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# === 本地数据库 / 缓存 ===
+*.db
+*.sqlite
+.cache/
