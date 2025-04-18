@@ -2,12 +2,8 @@ spring:
   application:
     name: server-gateway
   profiles:
-    active: dev
+    active: prod
   main:
     allow-bean-definition-overriding: true
     web-application-type: reactive
-  cloud:
-    nacos:
-      server-addr: 117.72.125.187:8848
-      username: nacos
-      password: nacos
+

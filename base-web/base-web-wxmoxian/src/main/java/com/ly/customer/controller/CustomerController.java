@@ -25,14 +25,14 @@ public class CustomerController {
 
 	@Operation(summary = "微信登录")
 	@GetMapping("/login/{code}")
-	public Result<String> wxLogin(@Schema(description = "微信code") @PathVariable String code){
+	public Result<String> wxLogin(@Schema(description = "微信code", name = "code") @PathVariable String code){
 		return Result.ok(customerService.login(code));
 	}
 
 	@Operation(summary = "获取客户登录信息")
 	@GetMapping("/getCustomerLoginInfo/{customerId}")
-	public Result<CustomerLoginVo> getCustomerLoginInfo(@@PathVariable Long customerId) {
-		return Result.ok(customerInfoService.getCustomerLoginInfo(customerId));
+	public Result<CustomerLoginVo> getCustomerLoginInfo(@Schema(description ="用户id",name = "customerId") @PathVariable Long customerId) {
+		return Result.ok(customerService.getCustomerLoginInfo(customerId));
 	}
 }
 

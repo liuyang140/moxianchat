@@ -1,3 +1,4 @@
+/*
 package com.ly.security.service;
 import com.ly.model.entity.system.SysUser;
 import com.ly.security.custom.CustomUser;
@@ -33,4 +34,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         sysUser.setUserPermsList(userPermsList);
         return new CustomUser(sysUser);
     }
-}
+}*/

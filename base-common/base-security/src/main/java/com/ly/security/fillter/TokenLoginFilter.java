@@ -1,3 +1,4 @@
+/*
 package com.ly.security.fillter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,12 +28,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+*/
 /**
  * <p>
  * 登录过滤器，继承UsernamePasswordAuthenticationFilter，对用户名密码进行登录校验
  * </p>
  *
- */
+ *//*
+
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private RedisTemplate redisTemplate;
@@ -50,13 +53,15 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.sysLoginLogFeignClient = sysLoginLogFeignClient;
     }
 
-    /**
+    */
+/**
      * 登录认证
      * @param req
      * @param res
      * @return
      * @throws AuthenticationException
-     */
+     *//*
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
             throws AuthenticationException {
@@ -71,7 +76,8 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     }
 
-    /**
+    */
+/**
      * 登录成功
      * @param request
      * @param response
@@ -79,7 +85,8 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
      * @param auth
      * @throws IOException
      * @throws ServletException
-     */
+     *//*
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
@@ -103,14 +110,16 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         ResponseUtil.out(response, Result.ok(map));
     }
 
-    /**
+    */
+/**
      * 登录失败
      * @param request
      * @param response
      * @param e
      * @throws IOException
      * @throws ServletException
-     */
+     *//*
+
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException e) throws IOException, ServletException {
@@ -121,3 +130,4 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 }
+*/

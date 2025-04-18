@@ -15,9 +15,12 @@ import com.ly.customer.service.CustomerService;
 import com.ly.model.dto.user.CacheUserDTO;
 import com.ly.model.entity.customer.CustomerInfo;
 import com.ly.model.entity.customer.CustomerLoginLog;
+import com.ly.model.vo.customer.CustomerLoginVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
@@ -46,6 +49,17 @@ public class CustomerServiceImpl  extends ServiceImpl<CustomerInfoMapper, Custom
 		//派发token使用jwt工具类，用customerId作为唯一标识，缓存到当前线程和redis中
 		String token = JwtUtils.generateToken(customerId);
 		return token;
+	}
+
+	@Override
+	public CustomerLoginVo getCustomerLoginInfo(Long customerId) {
+		CustomerInfo customerInfo = this.getById(customerId);
+		CustomerLoginVo customerInfoVo = new CustomerLoginVo();
+		BeanUtils.copyProperties(customerInfo, customerInfoVo);
+		//判断是否绑定手机号码，如果未绑定，小程序端发起绑定事件
+		Boolean isBindPhone = StringUtils.hasText(customerInfo.getPhone());
+		customerInfoVo.setIsBindPhone(isBindPhone);
+		return customerInfoVo;
 	}
 
 	private long getLoginCustomerId(String code) {
