@@ -2,11 +2,12 @@ package com.ly.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication(scanBasePackages = {"com.ly"})
+@SpringBootApplication(scanBasePackages = {"com.ly"},exclude = DataSourceAutoConfiguration .class)
 @EnableDiscoveryClient
 @EnableFeignClients
 @RefreshScope

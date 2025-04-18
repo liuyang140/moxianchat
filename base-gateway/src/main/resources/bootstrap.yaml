@@ -1,25 +1,13 @@
 spring:
   application:
-    name: web-customer
+    name: server-gateway
   profiles:
-    active: dev  # 默认激活 dev 环境
-
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
   cloud:
     nacos:
       server-addr: 117.72.125.187:8848
       username: nacos
       password: nacos
-      config:
-        # 根据环境动态选择命名空间
-        namespace: ${spring.profiles.active == 'dev' ? '1555926c-7e69-4779-868f-5b57b13cda4e' : 'a123456b-7890-4444-cccc-df890123abcd'}
-        group: DEFAULT_GROUP
-      discovery:
-        # 动态选择命名空间
-        namespace: ${spring.profiles.active == 'dev' ? '1555926c-7e69-4779-868f-5b57b13cda4e' : 'a123456b-7890-4444-cccc-df890123abcd'}
-        group: DEFAULT_GROUP
-
-  config:
-    import:
-      # 这里不再使用动态路径，直接引用已定义好的文件
-      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml?group=DEFAULT_GROUP&namespace=${spring.cloud.nacos.config.namespace}
-      - optional:nacos:common-account.yaml?group=DEFAULT_GROUP&namespace=${spring.cloud.nacos.config.namespace}
