@@ -1,5 +1,5 @@
 server:
-  port: 8501
+  port: 10011
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
@@ -20,7 +20,7 @@ spring:
             loggerLevel: basic
   data:
     redis:
-      host: localhost
+      host: 117.72.125.187
       port: 6379
       database: 0
       timeout: 1800000
@@ -32,16 +32,16 @@ spring:
           max-idle: 5    #最大空闲
           min-idle: 0     #最小空闲
   rabbitmq:
-    host: 139.198.163.91
+    host: 117.72.125.187
     port: 5672
     username: guest
     password: guest
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://139.198.104.58:3306/daijia_customer?characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://117.72.125.187:3306/daijia_customer?characterEncoding=utf-8&useSSL=false
     username: root
-    password: shangguigu@QY123
+    password: GydHLy123.
     hikari:
       connection-test-query: SELECT 1
       connection-timeout: 60000

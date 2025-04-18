@@ -5,21 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ly</groupId>
-        <artifactId>moxian-chat</artifactId>
+        <artifactId>base-service-client</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>base-common</artifactId>
-
-    <modules>
-        <module>base-common-util</module>
-        <module>base-service-util</module>
-        <module>base-common-log</module>
-        <module>base-security</module>
-        <module>base-rabbit-util</module>
-    </modules>
-
-    <packaging>pom</packaging>
+    <groupId>com.ly.customer</groupId>
+    <artifactId>base-service-customer-client</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

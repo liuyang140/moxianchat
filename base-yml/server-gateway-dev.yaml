@@ -35,18 +35,6 @@ spring:
             - Path=/customer-api/**
           filters:
             - StripPrefix=1
-        - id: web-driver
-          uri: lb://web-driver
-          predicates:
-            - Path=/driver-api/**
-          filters:
-            - StripPrefix=1
-        - id: web-mgr
-          uri: lb://web-mgr
-          predicates:
-            - Path=/mgr-api/**
-          filters:
-            - StripPrefix=1
         - id: service-payment
           uri: lb://service-payment
           predicates:

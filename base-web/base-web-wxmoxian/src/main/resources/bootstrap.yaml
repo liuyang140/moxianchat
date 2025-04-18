@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: web-customer
+  profiles:
+    active: dev  # 或启动时通过 --spring.profiles.active=prod
+
+  cloud:
+    nacos:
+      server-addr: 117.72.125.187:8848
+      username: nacos
+      password: nacos

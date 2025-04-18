@@ -15,7 +15,7 @@ public class AuthContextHolder {
         return userId.get();
     }
 
-    public static void removeUserId() {
+    public static void clear() {
         userId.remove();
     }
 

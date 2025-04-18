@@ -1,0 +1,17 @@
+spring:
+  config:
+    import:
+      - nacos:${spring.application.name}-dev.yaml?group=DEFAULT_GROUP&namespace=${custom.nacos.dev-namespace}
+      - nacos:common-account.yaml?group=DEFAULT_GROUP&namespace=${custom.nacos.dev-namespace}
+
+  cloud:
+    nacos:
+      server-addr: 117.72.125.187:8848
+      username: nacos
+      password: nacos
+      config:
+        namespace: ${custom.nacos.dev-namespace}
+        group: DEFAULT_GROUP
+      discovery:
+        namespace: ${custom.nacos.dev-namespace}
+        group: DEFAULT_GROUP
