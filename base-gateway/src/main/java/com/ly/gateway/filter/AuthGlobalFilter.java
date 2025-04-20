@@ -35,7 +35,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         // 获取Token（从请求头 Authorization 或自定义头中获取）
         String token = request.getHeaders().getFirst("token");
         if (StringUtils.isEmpty(token)) {
-            return ResponseUtil.forbidden(exchange, "请先登录");
+            return ResponseUtil.forbidden(exchange);
         }
 
         // 校验Token是否合法
@@ -43,14 +43,14 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         try {
             userId = JwtUtils.getUserIdFromToken(token); // 假设你token里有userId
         } catch (Exception e) {
-            return ResponseUtil.unauthorized(exchange, "Token非法或已过期");
+            return ResponseUtil.unauthorized(exchange);
         }
 
         // 校验Redis中是否有缓存（是否登录）
         String redisKey = RedisConstant.USER_LOGIN_KEY_PREFIX + userId;
         String json = redisUtils.get(redisKey);
         if (StringUtils.isEmpty(json)) {
-            return ResponseUtil.unauthorized(exchange, "登录状态失效，请重新登录");
+            return ResponseUtil.unauthorized(exchange);
         }
 
         // 将用户信息传递到下游服务（可选）

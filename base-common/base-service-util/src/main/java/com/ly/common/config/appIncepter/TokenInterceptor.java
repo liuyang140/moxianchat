@@ -45,7 +45,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
-        Result<?> result = Result.fail(ResultCodeEnum.PERMISSION);
+        Result<?> result = Result.build(null,ResultCodeEnum.PERMISSION);
         PrintWriter writer = response.getWriter();
         writer.write(objectMapper.writeValueAsString(result));
         writer.flush();

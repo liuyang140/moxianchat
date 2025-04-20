@@ -7,3 +7,6 @@ spring:
     allow-bean-definition-overriding: true
     web-application-type: reactive
 
+auth:
+  interceptor:
+    enabled: false

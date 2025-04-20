@@ -45,16 +45,16 @@ public class ResponseUtil {
         return response.writeWith(Mono.just(buffer));
     }
 
-    public static Mono<Void> unauthorized(ServerWebExchange exchange, String message) {
-        return writeJsonResponse(exchange, Result.fail(ResultCodeEnum.PERMISSION), HttpStatus.UNAUTHORIZED);
+    public static Mono<Void> unauthorized(ServerWebExchange exchange) {
+        return writeJsonResponse(exchange, Result.build(null,ResultCodeEnum.PERMISSION), HttpStatus.UNAUTHORIZED);
     }
 
-    public static Mono<Void> forbidden(ServerWebExchange exchange, String message) {
-        return writeJsonResponse(exchange, Result.fail(ResultCodeEnum.LOGIN_AUTH), HttpStatus.FORBIDDEN);
+    public static Mono<Void> forbidden(ServerWebExchange exchange) {
+        return writeJsonResponse(exchange, Result.build(null,ResultCodeEnum.LOGIN_AUTH), HttpStatus.FORBIDDEN);
     }
 
-    public static Mono<Void> badRequest(ServerWebExchange exchange, String message) {
-        return writeJsonResponse(exchange, Result.fail(ResultCodeEnum.ILLEGAL_REQUEST), HttpStatus.BAD_REQUEST);
+    public static Mono<Void> badRequest(ServerWebExchange exchange) {
+        return writeJsonResponse(exchange, Result.build(null,ResultCodeEnum.ILLEGAL_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
 
