@@ -50,4 +50,13 @@ public class UserCacheUtils {
         String key = RedisConstant.USER_LOGIN_KEY_PREFIX + userId;
         redisUtils.expire(key, DEFAULT_EXPIRE_SECONDS);
     }
+
+    /*
+    * 获取用户id
+    * */
+     public Long getCustomerId() {
+        return AuthContextHolder.getUserId();
+    }
+
+
 }

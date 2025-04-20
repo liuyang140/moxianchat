@@ -30,9 +30,9 @@ public class CustomerController {
 	}
 
 	@Operation(summary = "获取客户登录信息")
-	@GetMapping("/getCustomerLoginInfo/{customerId}")
-	public Result<CustomerLoginVo> getCustomerLoginInfo(@Schema(description ="用户id",name = "customerId") @PathVariable Long customerId) {
-		return Result.ok(customerService.getCustomerLoginInfo(customerId));
+	@GetMapping("/getCustomerLoginInfo")
+	public Result<CustomerLoginVo> getCustomerLoginInfo() {
+		return Result.ok(customerService.getCustomerLoginInfo());
 	}
 }
 

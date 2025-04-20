@@ -52,7 +52,8 @@ public class CustomerServiceImpl  extends ServiceImpl<CustomerInfoMapper, Custom
 	}
 
 	@Override
-	public CustomerLoginVo getCustomerLoginInfo(Long customerId) {
+	public CustomerLoginVo getCustomerLoginInfo() {
+		Long customerId = userCacheUtils.getCustomerId();
 		CustomerInfo customerInfo = this.getById(customerId);
 		CustomerLoginVo customerInfoVo = new CustomerLoginVo();
 		BeanUtils.copyProperties(customerInfo, customerInfoVo);

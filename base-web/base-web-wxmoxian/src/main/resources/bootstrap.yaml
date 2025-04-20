@@ -2,5 +2,5 @@ spring:
   application:
     name: web-customer
   profiles:
-    active: prod  # 或启动时通过 --spring.profiles.active=prod
+    active: dev  # 或启动时通过 --spring.profiles.active=prod
 
