@@ -1,6 +1,8 @@
 package com.ly.gateway.filter;
 
+import com.alibaba.nacos.shaded.com.google.common.collect.Lists;
 import com.ly.common.constant.RedisConstant;
+import com.ly.common.constant.SystemConstant;
 import com.ly.common.util.JwtUtils;
 import com.ly.common.util.RedisUtils;
 import com.ly.common.util.ResponseUtil;
@@ -15,6 +17,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @Slf4j
 @Component
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
@@ -22,18 +28,20 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     @Autowired
     private RedisUtils redisUtils;
 
+    public static final List<String> FILTER_LIST = Arrays.asList("/login", "/register");
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
 
-        // 放行白名单接口（比如登录、注册、公开接口等）
-        if (path.contains("/login") || path.contains("/register")) {
+        // 放行白名单接口
+        if (FILTER_LIST.stream().anyMatch(path::contains)) {
             return chain.filter(exchange);
         }
 
-        // 获取Token（从请求头 Authorization 或自定义头中获取）
-        String token = request.getHeaders().getFirst("token");
+        // 获取Token
+        String token = request.getHeaders().getFirst(SystemConstant.TOKEN);
         if (StringUtils.isEmpty(token)) {
             return ResponseUtil.forbidden(exchange);
         }
@@ -41,22 +49,22 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         // 校验Token是否合法
         Long userId;
         try {
-            userId = JwtUtils.getUserIdFromToken(token); // 假设你token里有userId
+            userId = JwtUtils.getUserIdFromToken(token);
         } catch (Exception e) {
             return ResponseUtil.unauthorized(exchange);
         }
 
-        // 校验Redis中是否有缓存（是否登录）
+        // 校验Redis中是否有缓存
         String redisKey = RedisConstant.USER_LOGIN_KEY_PREFIX + userId;
         String json = redisUtils.get(redisKey);
         if (StringUtils.isEmpty(json)) {
             return ResponseUtil.unauthorized(exchange);
         }
 
-        // 将用户信息传递到下游服务（可选）
+        // 将用户信息传递到下游服务
         ServerHttpRequest newRequest = request.mutate()
-                .header("userId", userId.toString())
-                .header("token", token)
+                .header(SystemConstant.USER_ID, userId.toString())
+                .header(SystemConstant.TOKEN, token)
                 .build();
 
         ServerWebExchange newExchange = exchange.mutate().request(newRequest).build();

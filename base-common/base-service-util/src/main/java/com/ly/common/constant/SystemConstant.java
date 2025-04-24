@@ -5,4 +5,8 @@ public class SystemConstant {
     //分账延迟时间，单位：秒
     public static final int PROFITSHARING_DELAY_TIME = 2*60;
 
+    public static final String USER_ID = "userId";
+
+    public static final String TOKEN = "token";
+
 }
