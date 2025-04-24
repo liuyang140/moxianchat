@@ -28,6 +28,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     @Autowired
     private RedisUtils redisUtils;
 
+    //白名单繁琐且变化时切换为配置
     public static final List<String> FILTER_LIST = Arrays.asList("/login", "/register");
 
     @Override

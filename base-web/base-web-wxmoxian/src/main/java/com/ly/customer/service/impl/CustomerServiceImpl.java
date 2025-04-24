@@ -12,6 +12,7 @@ import com.ly.common.util.UserCacheUtils;
 import com.ly.customer.mapper.CustomerInfoMapper;
 import com.ly.customer.mapper.CustomerLoginLogMapper;
 import com.ly.customer.service.CustomerService;
+import com.ly.model.dto.customer.UpdateCustomerDTO;
 import com.ly.model.dto.user.CacheUserDTO;
 import com.ly.model.entity.customer.CustomerInfo;
 import com.ly.model.entity.customer.CustomerLoginLog;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Objects;
@@ -27,8 +29,9 @@ import java.util.Objects;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class CustomerServiceImpl  extends ServiceImpl<CustomerInfoMapper, CustomerInfo>  implements CustomerService {
+public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, CustomerInfo>  implements CustomerService {
 
 	@Autowired
 	private UserCacheUtils userCacheUtils;
@@ -61,6 +64,17 @@ public class CustomerServiceImpl  extends ServiceImpl<CustomerInfoMapper, Custom
 		Boolean isBindPhone = StringUtils.hasText(customerInfo.getPhone());
 		customerInfoVo.setIsBindPhone(isBindPhone);
 		return customerInfoVo;
+	}
+
+	@Override
+	public void updateCustomerInfo(UpdateCustomerDTO updateCustomerDTO) {
+		String id = updateCustomerDTO.getId();
+		CustomerInfo queryCustomerInfo = this.getById(id);
+		if(Objects.nonNull(queryCustomerInfo)){
+			throw new LyException(ResultCodeEnum.DATA_ERROR);
+		}
+		CustomerInfo customerInfo = BeanUtil.copyProperties(updateCustomerDTO, CustomerInfo.class);
+		this.updateById(customerInfo);
 	}
 
 	private long getLoginCustomerId(String code) {
