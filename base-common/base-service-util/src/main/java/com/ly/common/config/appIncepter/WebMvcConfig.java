@@ -13,6 +13,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new TokenInterceptor())
                 .addPathPatterns("/**")               // 拦截所有路径
-                .excludePathPatterns("/**/login/**");   // 不拦截登录请求
+                .excludePathPatterns("/**/login","/**/login/**");   // 不拦截登录请求
     }
 }

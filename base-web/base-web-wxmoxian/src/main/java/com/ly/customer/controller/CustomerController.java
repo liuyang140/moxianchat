@@ -22,8 +22,14 @@ public class CustomerController {
 	private CustomerService customerService;
 
 	@Operation(summary = "微信登录")
-	@GetMapping("/login")
+	@GetMapping("/wxLogin")
 	public Result<String> wxLogin(@Schema(description = "微信code", name = "code") @RequestParam(value = "code") String code){
+		return Result.ok(customerService.login(code));
+	}
+
+	@Operation(summary = "本地微信登录测试")
+	@GetMapping("/login/{code}")
+	public Result<String> login(@Schema(description = "微信code", name = "code") @PathVariable(value = "code") String code){
 		return Result.ok(customerService.login(code));
 	}
 

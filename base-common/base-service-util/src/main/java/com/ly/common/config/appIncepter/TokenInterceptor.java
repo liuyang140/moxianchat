@@ -20,6 +20,10 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+         if(request.getRequestURI().contains("/login")){
+            return true;
+        }
+
         String token = request.getHeader("token");
         if (StringUtils.isBlank(token)) {
             return sendError(response, "请先登录");
