@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.customer.mapper.CustomerLocationMapper">
+    <select id="selectNearbyUsers" resultType="com.ly.model.entity.customer.CustomerLocation">
+        SELECT *,
+               (
+                   6371 * ACOS(
+                           COS(RADIANS(#{lat})) * COS(RADIANS(latitude)) *
+                           COS(RADIANS(longitude) - RADIANS(#{lng})) +
+                           SIN(RADIANS(#{lat})) * SIN(RADIANS(latitude))
+                          )
+                   ) AS distance_km
+        FROM customer_location
+        WHERE user_id != #{userId}
+          AND (
+            6371 * ACOS(
+            COS(RADIANS(#{lat})) * COS(RADIANS(latitude)) *
+            COS(RADIANS(longitude) - RADIANS(#{lng})) +
+            SIN(RADIANS(#{lat})) * SIN(RADIANS(latitude))
+            )
+            ) &lt;= #{radiusKm}
+        ORDER BY distance_km ASC
+    </select>
+</mapper>

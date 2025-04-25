@@ -8,6 +8,9 @@ public class RedisConstant {
     public static final int USER_LOGIN_KEY_TIMEOUT = 60 * 60 * 24 * 100;
     public static final int USER_LOGIN_REFRESH_KEY_TIMEOUT = 60 * 60 * 24 * 365;
 
+    //经纬度
+    public static final String GEO_KEY = "user:geo:location";
+
 
 
 //    //订单与任务关联

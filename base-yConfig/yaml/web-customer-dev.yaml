@@ -9,6 +9,9 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
 
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.ly.model.entity
+
 spring:
   main:
     allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
@@ -21,7 +24,6 @@ spring:
             connectTimeout: 30000
             readTimeout: 30000
             loggerLevel: basic
-
 
   rabbitmq:
     host: 117.72.125.187
@@ -49,7 +51,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://117.72.125.187:3306/dl-chatdb?characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://117.72.125.187:3306/dl-chatdb?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: GydHLy123.
     hikari:

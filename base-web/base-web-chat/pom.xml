@@ -9,9 +9,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.ly.customer</groupId>
-    <artifactId>base-web-wxmoxian</artifactId>
-    <packaging>jar</packaging>
+    <groupId>com.ly.chat</groupId>
+    <artifactId>base-web-chat</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -21,19 +20,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.binarywang</groupId>
-            <artifactId>weixin-java-miniapp</artifactId>
+            <groupId>com.ly.customer</groupId>
+            <artifactId>base-service-customer-client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
     </dependencies>
-
-
-    <build>
-        <finalName>base-web-customer</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

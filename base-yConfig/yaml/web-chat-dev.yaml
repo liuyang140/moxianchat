@@ -1,11 +1,14 @@
 server:
   port: 10011
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
+
 feign:
   sentinel:
     enabled: true
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
+
 spring:
   main:
     allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
@@ -18,6 +21,7 @@ spring:
             connectTimeout: 30000
             readTimeout: 30000
             loggerLevel: basic
+
   data:
     redis:
       host: 117.72.125.187
@@ -31,15 +35,11 @@ spring:
           max-wait: -1    #最大阻塞等待时间(负数表示没限制)
           max-idle: 5    #最大空闲
           min-idle: 0     #最小空闲
-  rabbitmq:
-    host: 117.72.125.187
-    port: 5672
-    username: guest
-    password: guest
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://117.72.125.187:3306/daijia_customer?characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://117.72.125.187:3306/dl-chatdb?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: GydHLy123.
     hikari:
@@ -50,6 +50,14 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 5
       pool-name: GuliHikariPool
+
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 10MB     #单个文件最大限制
+      max-request-size: 20MB  #多个文件最大限制
+seata:
+  tx-service-group: moxian_tx_group
+  enable-auto-data-source-proxy: false

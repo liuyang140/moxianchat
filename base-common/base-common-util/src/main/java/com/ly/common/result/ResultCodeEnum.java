@@ -33,7 +33,9 @@ public enum ResultCodeEnum {
     ACCOUNT_STOP( 216, "账号已停用"),
     NODE_ERROR( 217, "该节点下有子节点，不可以删除"),
 
-    COB_NEW_ORDER_FAIL( 217, "抢单失败"),
+    COB_NEW_ORDER_FAIL( 220, "抢单失败"),
+
+    NO_MATCH( 230, "未匹配到附近用户"),
 
     WX_CODE_ERROR(260,"微信code异常" );
 

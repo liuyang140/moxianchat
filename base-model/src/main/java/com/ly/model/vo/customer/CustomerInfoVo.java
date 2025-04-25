@@ -22,4 +22,7 @@ public class CustomerInfoVo {
 	@Schema(description = "电话")
 	private String phone;
 
+	@Schema(description = "距离，单位km")
+	private double distanceKm;
+
 }

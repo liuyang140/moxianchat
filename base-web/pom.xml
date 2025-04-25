@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>base-web-wxmoxian</module>
+        <module>base-web-chat</module>
     </modules>
 
     <properties>
@@ -76,6 +77,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 </project>

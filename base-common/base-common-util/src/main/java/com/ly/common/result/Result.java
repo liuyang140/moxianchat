@@ -43,6 +43,13 @@ public class Result<T> {
         return result;
     }
 
+    public static <T> Result<T> build(ResultCodeEnum resultCodeEnum) {
+        Result<T> result = build(null);
+        result.setCode(resultCodeEnum.getCode());
+        result.setMessage(resultCodeEnum.getMessage());
+        return result;
+    }
+
     public static<T> Result<T> ok(){
         return Result.ok(null);
     }
