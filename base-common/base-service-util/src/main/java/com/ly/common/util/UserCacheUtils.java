@@ -36,7 +36,7 @@ public class UserCacheUtils {
     /**
      * 获取用户缓存信息（返回 CacheUserDTO）
      */
-    public CacheUserDTO getUser(Long userId) {
+    public CacheUserDTO getCacheUser(Long userId) {
         String key = RedisConstant.USER_LOGIN_KEY_PREFIX + userId;
         String json = redisUtils.get(key);
         if (json == null) return null;

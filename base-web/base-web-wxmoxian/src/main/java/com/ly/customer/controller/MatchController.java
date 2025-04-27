@@ -37,7 +37,7 @@ public class MatchController {
     // 匹配附近用户
     @GetMapping("/match/one")
     @Operation(summary = "匹配附近用户")
-    public Result<MatchUserVo> matchAndCreateRoom(@Schema(description = "用户ID") @RequestParam(value = "customerId",  required = true) Long customerId,
+    public Result<MatchUserVo> matchAndCreateRoom(@Schema(description = "用户ID可不传，后端调试用") @RequestParam(value = "customerId",  required = false) Long customerId,
                                                             @Schema(description = "距离，默认10，单位km")@RequestParam(defaultValue = "10",value = "initKm",required = false) Double initKm,
                                                             @Schema(description = "最大距离，默认50，单位km") @RequestParam(defaultValue = "50",value = "maxKm",required = false) Double maxKm,
                                                             @Schema(description = "递增距离，默认5，单位km") @RequestParam(defaultValue = "5", value = "stepKm",required = false) Double stepKm

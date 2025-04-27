@@ -1,4 +1,4 @@
-CREATE TABLE user_location (
+CREATE TABLE customer_location (
                                id BIGINT PRIMARY KEY COMMENT '主键',
                                create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

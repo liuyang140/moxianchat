@@ -1,19 +1,17 @@
 package com.ly.model.entity.chat;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.ly.model.entity.base.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("chat_room")
 public class ChatRoom extends BaseEntity {
 
-    @TableField("customer1_id")
-    private Long customer1Id;
+    /** 聊天室类型：private 或 group */
+    private Integer type;
 
-    @TableField("customer2_id")
-    private Long customer2Id;
+    /** 聊天室名称（仅群聊使用） */
+    private String name;
+
 }

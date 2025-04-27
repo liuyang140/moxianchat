@@ -23,7 +23,7 @@ public enum ResultCodeEnum {
     SIGN_OVERDUE(301, "签名已过期"),
     VALIDATECODE_ERROR(218 , "验证码错误"),
 
-    LOGIN_AUTH(208, "未登陆"),
+    LOGIN_AUTH(208, "未登录"),
     PERMISSION(209, "没有权限"),
     FORBIDDEN(210, "禁止访问"),
     ACCOUNT_ERROR(214, "账号不正确"),

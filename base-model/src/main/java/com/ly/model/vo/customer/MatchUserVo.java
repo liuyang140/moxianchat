@@ -27,4 +27,10 @@ public class MatchUserVo {
     @Schema(description = "距离，单位km")
     private double distanceKm;
 
+    @Schema(description = "目标用户id")
+    private Long targetCustomerId;
+
+    @Schema(description = "房间id")
+    private Long roomId;
+
 }
