@@ -1,16 +1,16 @@
 package com.ly.customer.service.impl;
 
+import com.ly.common.execption.LyException;
+import com.ly.common.result.ResultCodeEnum;
 import com.ly.common.util.DistanceUtil;
 import com.ly.common.util.RedisUtils;
 import com.ly.common.util.UserCacheUtils;
 import com.ly.customer.mapper.ChatRoomMapper;
 import com.ly.customer.mapper.CustomerLocationMapper;
-import com.ly.customer.service.ChatRoomService;
-import com.ly.customer.service.ChatRoomUserService;
-import com.ly.customer.service.CustomerLocationService;
-import com.ly.customer.service.MatchService;
+import com.ly.customer.service.*;
 import com.ly.model.entity.chat.ChatRoom;
 import com.ly.model.entity.chat.ChatRoomUser;
+import com.ly.model.entity.customer.CustomerInfo;
 import com.ly.model.entity.customer.CustomerLocation;
 import com.ly.model.enums.ChatEnum;
 import com.ly.model.vo.customer.MatchUserVo;
@@ -38,12 +38,23 @@ public class MatchServiceImpl implements MatchService {
 
     @Autowired
     private ChatRoomService chatRoomService;
-    @Autowired
-    private CustomerLocationMapper customerLocationMapper;
+
     @Autowired
     private ChatRoomUserService chatRoomUserService;
 
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private CustomerLocationMapper customerLocationMapper;
+
     public void updateLocation(Long customerId, double latitude, double longitude) {
+
+        CustomerInfo customerInfo = customerService.getById(customerId);
+        if (Objects.isNull(customerInfo)){
+            throw new LyException(ResultCodeEnum.ACCOUNT_NOT_FOUND);
+        }
+
         redisUtil.saveUserLocation(customerId, latitude, longitude);
 
         CustomerLocation location = customerLocationService.lambdaQuery()

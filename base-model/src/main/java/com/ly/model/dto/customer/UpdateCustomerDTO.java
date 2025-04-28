@@ -9,7 +9,7 @@ public class UpdateCustomerDTO {
 
     @Schema(description = "用户id")
     @NotBlank(message = "用户id不能为空")
-    private String id;
+    private Long id;
 
     @Schema(description = "客户昵称")
     private String nickname;

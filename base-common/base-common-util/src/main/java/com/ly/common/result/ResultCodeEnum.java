@@ -32,6 +32,7 @@ public enum ResultCodeEnum {
     LOGIN_MOBLE_ERROR( 216, "账号不正确"),
     ACCOUNT_STOP( 216, "账号已停用"),
     NODE_ERROR( 217, "该节点下有子节点，不可以删除"),
+    ACCOUNT_NOT_FOUND( 218, "用户不存在"),
 
     COB_NEW_ORDER_FAIL( 220, "抢单失败"),
 

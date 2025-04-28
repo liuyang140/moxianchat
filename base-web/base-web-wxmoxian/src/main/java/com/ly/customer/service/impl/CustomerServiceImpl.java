@@ -60,6 +60,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 		CustomerInfo customerInfo = this.getById(customerId);
 		CustomerLoginVo customerInfoVo = new CustomerLoginVo();
 		BeanUtils.copyProperties(customerInfo, customerInfoVo);
+		customerInfoVo.setCustomerId(customerId);
 		//判断是否绑定手机号码，如果未绑定，小程序端发起绑定事件
 		Boolean isBindPhone = StringUtils.hasText(customerInfo.getPhone());
 		customerInfoVo.setIsBindPhone(isBindPhone);
@@ -68,7 +69,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 
 	@Override
 	public void updateCustomerInfo(UpdateCustomerDTO updateCustomerDTO) {
-		String id = updateCustomerDTO.getId();
+		Long id = updateCustomerDTO.getId();
 		CustomerInfo queryCustomerInfo = this.getById(id);
 		if(Objects.isNull(queryCustomerInfo)){
 			throw new LyException(ResultCodeEnum.DATA_ERROR);

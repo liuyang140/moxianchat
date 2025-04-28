@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class CustomerLoginVo {
 
-    @Schema(description = "微信openId")
-    private String wxOpenId;
+    @Schema(description = "用户id")
+    private Long customerId;
 
     @Schema(description = "客户昵称")
     private String nickname;
