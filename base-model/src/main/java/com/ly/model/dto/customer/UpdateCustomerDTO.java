@@ -19,4 +19,7 @@ public class UpdateCustomerDTO {
 
     @Schema(description = "电话")
     private String phone;
+
+    @Schema(description = "性别 0-女 1-男")
+    private Integer gender;
 }

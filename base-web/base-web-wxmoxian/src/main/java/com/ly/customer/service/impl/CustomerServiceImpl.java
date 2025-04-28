@@ -70,7 +70,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 	public void updateCustomerInfo(UpdateCustomerDTO updateCustomerDTO) {
 		String id = updateCustomerDTO.getId();
 		CustomerInfo queryCustomerInfo = this.getById(id);
-		if(Objects.nonNull(queryCustomerInfo)){
+		if(Objects.isNull(queryCustomerInfo)){
 			throw new LyException(ResultCodeEnum.DATA_ERROR);
 		}
 		CustomerInfo customerInfo = BeanUtil.copyProperties(updateCustomerDTO, CustomerInfo.class);

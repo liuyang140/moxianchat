@@ -17,8 +17,8 @@ public class CustomerInfo extends BaseEntity {
 	@Schema(description = "客户昵称")
 	private String nickname;
 
-	@Schema(description = "性别")
-	private String gender;
+	@Schema(description = "性别 0女 1男")
+	private Integer gender;
 
 	@Schema(description = "头像")
 	private String avatarUrl;

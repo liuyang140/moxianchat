@@ -2,7 +2,7 @@ CREATE TABLE `customer_info` (
                                  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
                                  `wx_open_id` varchar(200) NOT NULL DEFAULT '' COMMENT '微信openId',
                                  `nickname` varchar(200) DEFAULT '' COMMENT '用户昵称',
-                                 `gender` char(1) NOT NULL DEFAULT '1' COMMENT '性别',
+                                 `gender` tinyint(3) DEFAULT NULL COMMENT '性别',
                                  `avatar_url` varchar(200) DEFAULT NULL COMMENT '头像',
                                  `phone` char(11) DEFAULT NULL COMMENT '电话',
                                  `status` tinyint(3) DEFAULT '1' COMMENT '1有效，2禁用',
