@@ -29,7 +29,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     private RedisUtils redisUtils;
 
     //白名单繁琐且变化时切换为配置
-    public static final List<String> FILTER_LIST = Arrays.asList("/login", "/register");
+    public static final List<String> FILTER_LIST = Arrays.asList("/login", "/register","/wxLogin");
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
