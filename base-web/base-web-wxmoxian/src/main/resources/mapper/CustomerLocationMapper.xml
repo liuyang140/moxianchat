@@ -11,7 +11,7 @@
                           )
                    ) AS distance_km
         FROM customer_location
-        WHERE user_id != #{userId}
+        WHERE customer_id != #{userId}
           AND (
             6371 * ACOS(
             COS(RADIANS(#{lat})) * COS(RADIANS(latitude)) *

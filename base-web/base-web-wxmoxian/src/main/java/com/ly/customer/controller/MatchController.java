@@ -35,7 +35,7 @@ public class MatchController {
     }
 
     // 匹配附近用户
-    @GetMapping("/match/one")
+    @GetMapping("/one")
     @Operation(summary = "匹配附近用户")
     public Result<MatchUserVo> matchAndCreateRoom(@Schema(description = "用户ID可不传，后端调试用") @RequestParam(value = "customerId",  required = false) Long customerId,
                                                             @Schema(description = "距离，默认10，单位km")@RequestParam(defaultValue = "10",value = "initKm",required = false) Double initKm,
