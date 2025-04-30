@@ -79,11 +79,12 @@ public class MatchServiceImpl implements MatchService {
         if(Objects.isNull(customerId)) customerId = userCacheUtils.getCustomerId();
         double radius = initRadius;
 
+        MatchUserVo matchUserVo = null;
         while (radius <= maxRadius) {
             // Redis匹配
             List<MatchUserVo> nearby = redisUtil.searchNearby(customerId, radius);
             if (!nearby.isEmpty()) {
-                return createRoom(customerId, randomPick(nearby));
+                matchUserVo = createRoom(customerId, randomPick(nearby));
             }
 
             // 数据库匹配
@@ -103,13 +104,21 @@ public class MatchServiceImpl implements MatchService {
                                 .setDistanceKm(DistanceUtil.calculate(self.getLatitude(), self.getLongitude(), loc.getLatitude(), loc.getLongitude())))
                         .collect(Collectors.toList());
 
-                return createRoom(customerId, randomPick(matchVos));
+                matchUserVo = createRoom(customerId, randomPick(matchVos));
             }
 
             radius += stepKm;
         }
 
-        return null;
+        if(Objects.nonNull(matchUserVo)){
+            CustomerInfo customerInfo = customerService.getById(matchUserVo.getCustomerId());
+            matchUserVo.setNickname(customerInfo.getNickname())
+                    .setAvatarUrl(customerInfo.getAvatarUrl())
+                    .setGender(customerInfo.getGender())
+                    .setPhone(customerInfo.getPhone());
+        }
+
+        return matchUserVo;
     }
 
     public MatchUserVo createRoom(Long userId, MatchUserVo target) {

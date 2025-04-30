@@ -9,14 +9,14 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class MatchUserVo {
 
-    @Schema(description = "用户Id")
+    @Schema(description = "匹配用户Id")
     private Long customerId;
 
     @Schema(description = "用户昵称")
     private String nickname;
 
     @Schema(description = "性别")
-    private String gender;
+    private Integer gender;
 
     @Schema(description = "头像")
     private String avatarUrl;
@@ -27,8 +27,8 @@ public class MatchUserVo {
     @Schema(description = "距离，单位km")
     private double distanceKm;
 
-    @Schema(description = "目标用户id")
-    private Long targetCustomerId;
+/*    @Schema(description = "目标用户id")
+    private Long targetCustomerId;*/
 
     @Schema(description = "房间id")
     private Long roomId;
