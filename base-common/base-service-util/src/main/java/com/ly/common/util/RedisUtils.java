@@ -9,7 +9,6 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.data.geo.Metrics;
 
 import java.time.Duration;
 import java.util.Collections;

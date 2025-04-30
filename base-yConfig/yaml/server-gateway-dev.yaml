@@ -35,10 +35,12 @@ spring:
             - Path=/customer-api/**
           filters:
             - StripPrefix=1
-        - id: service-payment
-          uri: lb://service-payment
+        - id: web-chat
+          uri: ws://web-chat:10012
           predicates:
-            - Path=/payment/**
+            - Path=/chat-api/**
+          filters:
+            - StripPrefix=1
   data:
     redis:
       host: 117.72.125.187

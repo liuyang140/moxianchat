@@ -1,4 +1,4 @@
-package com.ly.customer.mapper;
+package com.ly.chat.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ly.model.entity.chat.ChatMessage;

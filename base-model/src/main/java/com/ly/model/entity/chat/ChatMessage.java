@@ -19,13 +19,17 @@ public class ChatMessage extends BaseEntity {
     /** 消息内容 */
     private String content;
 
-    /** 消息类型（text, image, file 等） */
+    /** 消息类型（0-text, 1-image, 2-file 等） */
     @TableField("message_type")
-    private String messageType;
+    private Integer messageType;
 
     /** 是否被撤回 */
     @TableField("is_recalled")
     private Boolean isRecalled;
+
+    /*客户端发送时间戳*/
+    @TableField("timestamp")
+    private Long timestamp;
 
 
 }

@@ -87,4 +87,9 @@ public class Result<T> {
         this.setCode(code);
         return this;
     }
+
+    public Boolean isOk() {
+        return this.getCode().intValue() == ResultCodeEnum.SUCCESS.getCode().intValue();
+    }
+
 }

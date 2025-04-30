@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: web-chat
+  profiles:
+    active: dev  # 或启动时通过 --spring.profiles.active=prod
+
+netty:
+  port: 10012

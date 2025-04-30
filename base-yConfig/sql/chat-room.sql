@@ -24,8 +24,9 @@ CREATE TABLE chat_message (
                               room_id BIGINT NOT NULL COMMENT '聊天室ID',
                               sender_id BIGINT NOT NULL COMMENT '发送者用户ID',
                               content TEXT NOT NULL COMMENT '消息内容',
-                              message_type VARCHAR(20) DEFAULT 'text' COMMENT '消息类型：text / image / file 等',
+                              message_type TINYINT DEFAULT 0 COMMENT '消息类型：0-text / 1-image / 2-file 等',
                               is_recalled BOOLEAN DEFAULT FALSE COMMENT '是否被撤回',
+                              timestamp BIGINT DEFAULT NULL COMMENT '客户端发送时间戳',
                               create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
                               update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                               is_deleted TINYINT DEFAULT 0 COMMENT '逻辑删除字段'

@@ -11,6 +11,10 @@ public class RedisConstant {
     //经纬度
     public static final String GEO_KEY = "user:geo:location";
 
+    //聊天
+    public static final String ONLINE_KEY_PREFIX = "ws:online:user:";
+
+
 
 
 //    //订单与任务关联

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.chat.mapper.ChatRoomUserMapper">
+
+    <select id="selectRoomsByUsersAndType" resultType="java.lang.Long">
+        SELECT cru.room_id
+        FROM chat_room_user cru
+        JOIN chat_room cr ON cru.room_id = cr.id
+        WHERE cru.user_id IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        AND cr.type = #{roomType}
+        AND cr.is_deleted = 0
+        AND cru.is_deleted = 0
+        GROUP BY cru.room_id
+        HAVING COUNT(DISTINCT cru.user_id) = #{userIds.size}
+    </select>
+</mapper>
