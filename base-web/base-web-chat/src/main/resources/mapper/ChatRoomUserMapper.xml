@@ -3,6 +3,7 @@
 <mapper namespace="com.ly.chat.mapper.ChatRoomUserMapper">
 
     <select id="selectRoomsByUsersAndType" resultType="java.lang.Long">
+        <bind name="userCount" value="userIds.size()" />
         SELECT cru.room_id
         FROM chat_room_user cru
         JOIN chat_room cr ON cru.room_id = cr.id
@@ -14,6 +15,6 @@
         AND cr.is_deleted = 0
         AND cru.is_deleted = 0
         GROUP BY cru.room_id
-        HAVING COUNT(DISTINCT cru.user_id) = #{userIds.size}
+        HAVING COUNT(DISTINCT cru.user_id) = #{userCount}
     </select>
 </mapper>

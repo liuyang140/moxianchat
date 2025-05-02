@@ -41,18 +41,19 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     /*
     消息格式
     {
-      "type": "chat",        // 类型：chat-0、bind-1、recall-2、ping-3、login -4
+      "type": 0,        // 类型：chat-0、bind-1、recall-2、ping-3、login -4
       "chatType": 0,         // 聊天类型：0-私聊，1-群聊
       "roomId": 10001,       // 房间ID
       "senderId": 123,       // 发送者ID
       "receiverId": 456,     //接收者id
       "content": "你好！",    // 消息正文
-      "messageType": "text", // 消息类型
+      "messageType": 0, // 消息类型 0-文本，1-图片，2-文件
       "timestamp": 1688888888 // 客户端发送时间戳
     }
     * */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) {
+        log.info("收到消息: {}", msg.text());
         JSONObject json = JSON.parseObject(msg.text());
         Integer type = json.getInteger("type");
         ChatEventTypeEnum eventType = ChatEventTypeEnum.fromValue(type);

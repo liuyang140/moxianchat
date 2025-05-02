@@ -7,6 +7,7 @@ spring:
       discovery:
         namespace: 1555926c-7e69-4779-868f-5b57b13cda4e
         group: DEFAULT_GROUP
+        port: 10012
       server-addr: 117.72.125.187:8848
       username: nacos
       password: nacos
