@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChannelManager {
 
     private static final Map<Long, Channel> USER_CHANNEL_MAP = new ConcurrentHashMap<>();
-    private static final Map<Long, Long> lastActiveTimeMap = new ConcurrentHashMap<>();
+    private static final Map<Long, Long> LAST_ACTIVE_TIME_MAP = new ConcurrentHashMap<>();
     private static final Map<Long, Set<Long>> ROOM_USER_MAP = new ConcurrentHashMap<>();
 
     public static void joinRoom(Long roomId, Long userId) {
@@ -35,11 +35,11 @@ public class ChannelManager {
     }
 
     public static void refreshLastActiveTime(Long customerId) {
-        lastActiveTimeMap.put(customerId, System.currentTimeMillis());
+        LAST_ACTIVE_TIME_MAP.put(customerId, System.currentTimeMillis());
     }
 
     public static Long getLastActiveTime(Long customerId) {
-        return lastActiveTimeMap.get(customerId);
+        return LAST_ACTIVE_TIME_MAP.get(customerId);
     }
 
     public static void add(Long userId, Channel channel) {

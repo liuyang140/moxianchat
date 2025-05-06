@@ -13,7 +13,8 @@ public enum ChatEventTypeEnum {
     PING(3, "心跳包"),
     JOIN_GROUP_ROOM(4, "加入群聊房间"),
     LEAVE_GROUP_ROOM(5, "离开群聊房间"),
-    ONLINE_USERS(6, "当前房间在线用户列表"),
+    ONLINE_USERS(6, "推送当前房间在线用户列表"),
+    KICK(7, "用户重连"),
             ;
 
     private Integer value;

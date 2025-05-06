@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ly.chat.netty.websocket.ChannelManager;
 import com.ly.chat.netty.websocket.RedisUserSessionManager;
 import com.ly.chat.service.ChatMessageService;
+import com.ly.common.result.ResultCodeEnum;
 import com.ly.common.result.WsResult;
 import com.ly.model.enums.ChatEventTypeEnum;
 import io.netty.channel.*;
@@ -175,22 +176,41 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     */
     private void handleBind(ChannelHandlerContext ctx, JSONObject json) {
         Long userId = json.getLong("senderId");
-        Channel channel = ctx.channel();
+        Channel newChannel = ctx.channel();
+        ChannelId newChannelId = newChannel.id();
 
-        // 判断是否是重连
-        boolean isReconnect = sessionManager.isOnline(userId);
+
+        // 检查是否已有连接（是否重连）
+        Channel oldChannel = ChannelManager.get(userId);
+        boolean isReconnect = (oldChannel != null && oldChannel.isActive() && oldChannel != newChannel);
+
+        if (isReconnect) {
+            // 主动踢下线旧连接
+            log.info("用户 {} 重连，踢出旧 channel {}", userId, oldChannel.id().asLongText());
+
+            // 发送被踢通知
+            sendWsResult(oldChannel,WsResult.build(ChatEventTypeEnum.KICK.getValue(),null, ResultCodeEnum.PERMISSION.getCode(), "您已在其他地方登录，请重新登录"));
+
+            // 清理旧 channel 本地与 Redis 状态
+            CHANNEL_USER_MAP.remove(oldChannel.id(), userId);
+            ChannelManager.remove(oldChannel);
+            sessionManager.offline(userId);
+
+            // 关闭旧连接
+            oldChannel.close();
+        }
 
         // 本地缓存映射
-        CHANNEL_USER_MAP.putIfAbsent(channel.id(), userId);
-        ChannelManager.add(userId, channel);
+        CHANNEL_USER_MAP.put(newChannel.id(), userId);
+        ChannelManager.add(userId, newChannel);
 
         // 设置用户在线状态
         sessionManager.online(userId);
 
         // 绑定 channelId 到 Redis
-        sessionManager.bindChannel(userId, channel.id().asLongText());
+        sessionManager.bindChannel(userId, newChannelId.asLongText());
 
-        // === 新增：恢复房间关系 ===
+        // 恢复房间关系
         Set<String> roomIds = sessionManager.getUserRooms(userId);
         if (roomIds != null) {
             for (String roomId : roomIds) {
@@ -199,12 +219,12 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
             log.info("恢复用户 {} 的房间列表: {}", userId, roomIds);
         }
 
-        log.info("用户 {} {}，绑定 channel {}", userId, isReconnect ? "重连成功" : "上线", channel.id().asLongText());
+        log.info("用户 {} {}，绑定 channel {}", userId, isReconnect ? "重连成功" : "上线", newChannelId.asLongText());
 
         // 向客户端通知重连或首次登录成功，及房间列表
         sendSuccess(ctx, ChatEventTypeEnum.BIND, Map.of(
                 "reconnect", isReconnect,
-                "rooms", roomIds
+                "rooms", roomIds != null ? roomIds : Set.of()
         ), isReconnect ? "重连成功" : "绑定成功");
     }
 
@@ -272,4 +292,10 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         String json = JSON.toJSONString(result);
         ctx.writeAndFlush(new TextWebSocketFrame(json));
     }
+
+    public static void sendWsResult(Channel oldChannel, WsResult<?> result) {
+        String json = JSON.toJSONString(result);
+        oldChannel.writeAndFlush(new TextWebSocketFrame(json));
+    }
+
 }
