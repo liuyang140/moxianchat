@@ -17,6 +17,6 @@ fi
 
 # 启动服务
 echo "启动 $JAR_NAME 端口 $PORT 启动中, 启动环境: $PROFILE..."
-nohup java -jar $JAR_NAME --server.port=$PORT --spring.profiles.active=$PROFILE > web-customer.log 2>&1 &
+nohup java -jar $JAR_NAME --server.port=$PORT --spring.profiles.active=$PROFILE > web-chat.log 2>&1 &
 
-echo "$JAR_NAME 已启动. Logs: web-customer.log"
+echo "$JAR_NAME 已启动. Logs: web-chat.log"

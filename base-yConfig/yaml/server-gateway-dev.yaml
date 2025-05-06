@@ -36,7 +36,7 @@ spring:
           filters:
             - StripPrefix=1
         - id: web-chat
-          uri: ws://web-chat:10012
+          uri: lb:ws://web-chat
           predicates:
             - Path=/chat-api/**
           filters:

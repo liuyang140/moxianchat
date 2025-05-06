@@ -45,7 +45,7 @@ public class ChatMessageServiceImpl {
             }
         }
 
-        // 群聊广播（如果需要）
+        // 群聊广播
         if (Objects.equals(dto.getChatType(), ChatTypeEnum.GROUP.getValue())) {
             List<Long> members = chatRoomMapper.getRoomMemberIds(dto.getRoomId());
             for (Long memberId : members) {
