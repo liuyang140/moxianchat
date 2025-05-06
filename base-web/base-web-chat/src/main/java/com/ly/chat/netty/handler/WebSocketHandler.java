@@ -72,7 +72,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
             case JOIN_GROUP_ROOM -> handleJoinRoom(ctx, json);
             case LEAVE_GROUP_ROOM -> handleLeaveRoom(ctx, json);
             case ONLINE_USERS -> handleOnlineUsers(ctx, json);
-            default -> sendFail(ctx,  "未知消息类型");
+            default -> sendFail(ctx,  "暂不支持的事件类型");
         }
     }
 
