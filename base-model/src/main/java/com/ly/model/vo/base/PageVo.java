@@ -2,6 +2,7 @@ package com.ly.model.vo.base;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @Data
 @Schema(description = "分页数据消息体")
-@Builder
+@Accessors(chain = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class PageVo<T> implements Serializable {

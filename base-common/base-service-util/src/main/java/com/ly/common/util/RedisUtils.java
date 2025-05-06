@@ -10,9 +10,11 @@ import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.Time;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,16 @@ public class RedisUtils {
         redisTemplate.delete(key);
     }
 
+    public void deleteKeys(String... keys) {
+        redisTemplate.delete(List.of(keys));
+    }
+
+    // 从 Set 中移除元素
+    public Long sRemove(String key, String... values) {
+        return redisTemplate.opsForSet().remove(key, values);
+    }
+
+
     /**
      * 判断 key 是否存在
      */
@@ -66,6 +78,10 @@ public class RedisUtils {
         redisTemplate.expire(key, timeoutSeconds, TimeUnit.SECONDS);
     }
 
+    public void expire(String key, long timeoutSeconds, TimeUnit timeUnit) {
+        redisTemplate.expire(key, timeoutSeconds, timeUnit);
+    }
+
     /**
      * 获取 key 剩余过期时间（单位：秒）
      */
@@ -73,11 +89,24 @@ public class RedisUtils {
         return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
+    public Set<String> sMembers(String key) {
+        return redisTemplate.opsForSet().members(key);
+    }
+
+    // 添加元素到 Set 中
+    public Long sAdd(String key, String... values) {
+        return redisTemplate.opsForSet().add(key, values);
+    }
+
+    public Boolean isMember(String key, String value) {
+        return redisTemplate.opsForSet().isMember(key, value);
+    }
 
     public void saveUserLocation(Long userId, double latitude, double longitude) {
         redisTemplate.opsForGeo().add(GEO_KEY, new Point(longitude, latitude), String.valueOf(userId));
         redisTemplate.expire(GEO_KEY, Duration.ofHours(24));
     }
+
 
     public List<MatchUserVo> searchNearby(Long userId, double radiusKm) {
         List<Point> points = redisTemplate.opsForGeo().position(GEO_KEY, String.valueOf(userId));

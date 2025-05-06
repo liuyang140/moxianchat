@@ -12,8 +12,11 @@ public class RedisConstant {
     public static final String GEO_KEY = "user:geo:location";
 
     //聊天
-    public static final String ONLINE_KEY_PREFIX = "ws:online:user:";
-
+    public static final String ONLINE_KEY_PREFIX = "chat:online:"; // 用户在线状态
+    public static final String CHANNEL_KEY_PREFIX = "chat:channel:"; // 用户ChannelId
+    public static final String LAST_ACTIVE_PREFIX = "chat:lastActive:"; // 活跃时间
+    public static final String USER_ROOM_PREFIX = "chat:user:rooms:"; //用户加入的房间集合
+    public static final String ROOM_KEY_PREFIX = "chat:room:"; // 房间成员集合
 
 
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.chat.mapper.ChatMessageMapper">
+
+    <select id="getHistoryMessages" resultType="com.ly.model.vo.chat.ChatMessageVo">
+        SELECT id,
+               sender_id AS senderId,
+               receiver_id AS receiverId,
+               content,
+               message_type AS messageType,
+               chat_type AS chatType,
+            timestamp,
+            create_time
+        FROM chat_message
+        WHERE room_id = #{roomId}
+          AND is_deleted = 0
+          AND recalled = 0
+        ORDER BY create_time DESC
+            LIMIT #{offset}, #{size}
+    </select>
+    <select id="getHistoryMessagesCount" resultType="java.lang.Long">
+        SELECT count(1)
+        FROM chat_message
+        WHERE room_id = #{roomId}
+          AND is_deleted = 0
+          AND recalled = 0
+        ORDER BY create_time DESC
+    </select>
+</mapper>

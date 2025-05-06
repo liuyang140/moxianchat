@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ly.chat.netty.websocket.ChannelManager;
 import com.ly.chat.netty.websocket.RedisUserSessionManager;
-import com.ly.chat.service.ChatRoomService;
-import com.ly.chat.service.impl.ChatMessageServiceImpl;
+import com.ly.chat.service.ChatMessageService;
+import com.ly.common.result.WsResult;
 import com.ly.model.enums.ChatEventTypeEnum;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -22,13 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     @Resource
-    private ChatMessageServiceImpl chatMessageServiceImpl;
+    private ChatMessageService chatMessageService;
 
     @Resource
     private RedisUserSessionManager sessionManager;
-
-    @Resource
-    private ChatRoomService roomService;
 
     private static final Map<ChannelId, Long> CHANNEL_USER_MAP = new ConcurrentHashMap<>();
 
@@ -49,6 +47,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
       "content": "你好！",    // 消息正文
       "messageType": 0, // 消息类型 0-文本，1-图片，2-文件
       "timestamp": 1688888888 // 客户端发送时间戳
+      "messageId": 123456789 // 消息ID
+      "messageStatus": 0 // 消息状态 0-正常，1-撤回
     }
     * */
     @Override
@@ -59,43 +59,217 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         ChatEventTypeEnum eventType = ChatEventTypeEnum.fromValue(type);
 
         if (eventType == null) {
-            ctx.writeAndFlush(new TextWebSocketFrame("未知消息类型:" + msg.text()));
+            sendFail(ctx,  "未知消息类型");
             return;
         }
 
         switch (eventType) {
             case CHAT-> handleChat(ctx, json);
             case BIND -> handleBind(ctx, json);
-            default -> ctx.writeAndFlush(new TextWebSocketFrame("暂不支持的事件类型:"+msg.text()));
+            case RECALL -> handleRecall(ctx, json);
+            case PING -> handlePing(ctx, json);
+            case JOIN_GROUP_ROOM -> handleJoinRoom(ctx, json);
+            case LEAVE_GROUP_ROOM -> handleLeaveRoom(ctx, json);
+            case ONLINE_USERS -> handleOnlineUsers(ctx, json);
+            default -> sendFail(ctx,  "未知消息类型");
         }
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        Channel channel = ctx.channel();
+        /*  Channel channel = ctx.channel();
         Long userId = CHANNEL_USER_MAP.remove(channel.id());
         if (userId != null) {
             ChannelManager.remove(channel);
-            sessionManager.offline(userId);
+            sessionManager.offline(userId);// 只清除连接状态，保留房间关系，支持断线重连
             log.info("用户 {} 下线", userId);
-        }
+        }*/
+        safeRemove(ctx);
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        sendFail(ctx,"服务器异常");
+        log.error("WebSocket异常: {}", cause.getMessage(), cause);
+        ctx.close();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        safeRemove(ctx); // 复用原下线逻辑
+        super.channelInactive(ctx);
+    }
+
+    /*
+    * {
+          "type": 4,
+          "roomId": 123,
+          "userId": 1001
+        }
+    * */
+    private void handleJoinRoom(ChannelHandlerContext ctx, JSONObject json) {
+        Long roomId = json.getLong("roomId");
+        Long userId = json.getLong("userId");
+
+        ChannelManager.joinRoom(roomId, userId);
+        sessionManager.saveRoomUser(roomId, userId);
+
+        // 回复客户端
+        sendSuccess(ctx,ChatEventTypeEnum.JOIN_GROUP_ROOM,null,"加入群聊成功");
+    }
+
+    private void handleLeaveRoom(ChannelHandlerContext ctx, JSONObject json) {
+        Long roomId = json.getLong("roomId");
+        Long userId = json.getLong("userId");
+
+        ChannelManager.leaveRoom(roomId, userId);
+
+        // 回复客户端
+        sendSuccess(ctx,ChatEventTypeEnum.LEAVE_GROUP_ROOM,null,"已退出群聊");
+    }
+
+    private void handleOnlineUsers(ChannelHandlerContext ctx, JSONObject json) {
+        Long roomId = json.getLong("roomId");
+
+        Set<Long> userIds = ChannelManager.getRoomUsers(roomId);
+
+        sendSuccess(ctx,ChatEventTypeEnum.ONLINE_USERS, userIds, "当前房间用户列表查询成功");
+
+    }
+
+
+    /*
+    * {
+          "type": 4,
+          "customerId": 1234,
+          "timestamp": 1714976542000
+       }
+       10-20秒发送一次心跳包
+    * */
+    private void handlePing(ChannelHandlerContext ctx, JSONObject json) {
+        Long customerId = json.getLong("customerId");
+        ChannelManager.refreshLastActiveTime(customerId); // 更新活跃时间
+        sessionManager.refreshAllTTL(customerId); //刷新redis所有关联ttl
+        //TODO 持久层更新用户活跃时间，feign远程调用 ... 暂不实现
+
+        sendSuccess(ctx,ChatEventTypeEnum.PING,null, "pong");
+    }
+
+    /*
+      {
+          "type": 2,
+          "messageId": 12345,
+          "roomId": 1001,
+          "senderId": 2001
+      }
+   */
+    private void handleRecall(ChannelHandlerContext ctx, JSONObject json) {
+        chatMessageService.recallMessage(json);
+    }
+
+    /*
+      {
+          "type": 1,
+          "senderId": 2001
+      }
+    */
     private void handleBind(ChannelHandlerContext ctx, JSONObject json) {
         Long userId = json.getLong("senderId");
         Channel channel = ctx.channel();
-        CHANNEL_USER_MAP.put(channel.id(), userId);
+
+        // 判断是否是重连
+        boolean isReconnect = sessionManager.isOnline(userId);
+
+        // 本地缓存映射
+        CHANNEL_USER_MAP.putIfAbsent(channel.id(), userId);
         ChannelManager.add(userId, channel);
+
+        // 设置用户在线状态
         sessionManager.online(userId);
-        log.info("用户 {} 上线", userId);
 
+        // 绑定 channelId 到 Redis
+        sessionManager.bindChannel(userId, channel.id().asLongText());
+
+        // === 新增：恢复房间关系 ===
+        Set<String> roomIds = sessionManager.getUserRooms(userId);
+        if (roomIds != null) {
+            for (String roomId : roomIds) {
+                ChannelManager.joinRoom(Long.valueOf(roomId), userId);
+            }
+            log.info("恢复用户 {} 的房间列表: {}", userId, roomIds);
+        }
+
+        log.info("用户 {} {}，绑定 channel {}", userId, isReconnect ? "重连成功" : "上线", channel.id().asLongText());
+
+        // 向客户端通知重连或首次登录成功，及房间列表
+        sendSuccess(ctx, ChatEventTypeEnum.BIND, Map.of(
+                "reconnect", isReconnect,
+                "rooms", roomIds
+        ), isReconnect ? "重连成功" : "绑定成功");
     }
 
-
+    /*
+    {
+      "type": 0,
+      "chatType": 0,
+      "roomId": 10001,
+      "senderId": 2,
+      "receiverId": 1,
+      "content": "big蛋！",
+      "messageType": 0,
+      "timestamp": 1688888888
+    }
+    * */
     private void handleChat(ChannelHandlerContext ctx, JSONObject json) {
+        if (sessionManager.getChannelId(json.getLong("senderId")) == null) {
+            sendFail(ctx, "请先绑定用户");
+            return;
+        }
         // 持久化 + 转发
-        chatMessageServiceImpl.saveAndForward(json);
+        chatMessageService.saveAndForward(json);
     }
 
+    private void safeRemove(ChannelHandlerContext ctx) {
+        Channel channel = ctx.channel();
+        ChannelId channelId = channel.id();
 
+        // 获取并尝试移除 userId，如果已移除，则说明处理过
+        Long userId = CHANNEL_USER_MAP.get(channelId);
+        if (userId == null) {
+            return; // 已经处理过了，幂等处理
+        }
+
+        // remove(k,v) 是线程安全的，只有当 key 对应 value 时才移除
+        boolean removed = CHANNEL_USER_MAP.remove(channelId, userId);
+        if (!removed) {
+            return; // 别的线程已经处理了
+        }
+
+        try {
+            ChannelManager.remove(channel);
+            sessionManager.offline(userId);
+        } catch (Exception e) {
+            log.warn("safeRemove 出错：{}", e.getMessage(), e);
+        }
+
+        log.info("安全移除用户 {}，channel {}", userId, channelId.asLongText());
+    }
+
+    /**
+     * 统一发送 WebSocket 响应
+     */
+    private void sendSuccess(ChannelHandlerContext ctx, ChatEventTypeEnum type, Object data, String msg) {
+        sendWsResult(ctx, WsResult.ok(type.getValue(), data, msg));
+    }
+
+    private void sendFail(ChannelHandlerContext ctx, String message) {
+        if (ctx.channel().isActive()) {
+            sendWsResult(ctx, WsResult.fail(-1, message));
+        }
+    }
+
+    public static void sendWsResult(ChannelHandlerContext ctx, WsResult<?> result) {
+        String json = JSON.toJSONString(result);
+        ctx.writeAndFlush(new TextWebSocketFrame(json));
+    }
 }

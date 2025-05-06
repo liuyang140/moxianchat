@@ -24,12 +24,22 @@ public class ChatMessage extends BaseEntity {
     private Integer messageType;
 
     /** 是否被撤回 */
-    @TableField("is_recalled")
-    private Boolean isRecalled;
+    @TableField("recalled")
+    private Integer recalled;
 
     /*客户端发送时间戳*/
     @TableField("timestamp")
     private Long timestamp;
+
+    /*聊天类型 0私聊，1群聊*/
+    @TableField("chat_type")
+    private Integer chatType;
+
+    /*接收人用户*/
+    @TableField("receiver_id")
+    private Long receiverId;
+
+
 
 
 }
