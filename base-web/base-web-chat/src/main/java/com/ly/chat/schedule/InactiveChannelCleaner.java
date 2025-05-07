@@ -3,6 +3,7 @@ package com.ly.chat.schedule;
 import com.ly.chat.netty.websocket.ChannelManager;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +13,14 @@ import java.util.Map;
 @Slf4j
 public class InactiveChannelCleaner {
 
+    @Value("${netty.websocket.ping-interval}")
+    private int pingInterval;
+
     // 每10秒执行一次
     @Scheduled(fixedDelay = 10000)
     public void cleanInactiveChannels() {
         long now = System.currentTimeMillis();
-        long timeout = 30 * 1000; // 30秒未心跳视为断线
+        long timeout = pingInterval * 1000; // 30秒未心跳视为断线
 
         for (Map.Entry<Long, Channel> entry : ChannelManager.getAll().entrySet()) {
             Long userId = entry.getKey();

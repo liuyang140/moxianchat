@@ -22,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
@@ -56,14 +55,13 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 
 	@Override
 	public CustomerLoginVo getCustomerLoginInfo() {
-		Long customerId = userCacheUtils.getCustomerId();
-		CustomerInfo customerInfo = this.getById(customerId);
+/*		Long customerId = userCacheUtils.getCustomerId();
+		CustomerInfo customerInfo = this.getById(customerId);*/
+		CacheUserDTO cacheUser = userCacheUtils.getCacheUser();
 		CustomerLoginVo customerInfoVo = new CustomerLoginVo();
-		BeanUtils.copyProperties(customerInfo, customerInfoVo);
-		customerInfoVo.setCustomerId(customerId);
+		BeanUtils.copyProperties(cacheUser, customerInfoVo);
+		customerInfoVo.setCustomerId(cacheUser.getId());
 		//判断是否绑定手机号码，如果未绑定，小程序端发起绑定事件
-		Boolean isBindPhone = StringUtils.hasText(customerInfo.getPhone());
-		customerInfoVo.setIsBindPhone(isBindPhone);
 		return customerInfoVo;
 	}
 
@@ -76,6 +74,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 		}
 		CustomerInfo customerInfo = BeanUtil.copyProperties(updateCustomerDTO, CustomerInfo.class);
 		this.updateById(customerInfo);
+		//更新缓存信息
+		userCacheUtils.cacheUser(id, BeanUtil.copyProperties(customerInfo, CacheUserDTO.class));
 	}
 
 	private long getLoginCustomerId(String code) {

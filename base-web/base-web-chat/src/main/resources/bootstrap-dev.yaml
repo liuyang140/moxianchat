@@ -7,7 +7,6 @@ spring:
       discovery:
         namespace: 1555926c-7e69-4779-868f-5b57b13cda4e
         group: DEFAULT_GROUP
-        port: 10012
       server-addr: 117.72.125.187:8848
       username: nacos
       password: nacos
@@ -15,3 +14,9 @@ spring:
     import:
       - nacos:web-chat-dev.yaml?group=DEFAULT_GROUP&namespace=1555926c-7e69-4779-868f-5b57b13cda4e
       - nacos:common-account.yaml?group=DEFAULT_GROUP&namespace=1555926c-7e69-4779-868f-5b57b13cda4e
+
+# netty.websocket.ping-interval
+netty:
+  port: 10012
+  websocket:
+    ping-interval: 1000

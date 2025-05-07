@@ -36,9 +36,15 @@ spring:
           filters:
             - StripPrefix=1
         - id: web-chat
-          uri: lb:ws://web-chat
+          uri: lb://web-chat
           predicates:
             - Path=/chat-api/**
+          filters:
+            - StripPrefix=1
+        - id: web-chat-ws
+          uri: lb:ws://web-chat-ws
+          predicates:
+            - Path=/chat-ws/**
           filters:
             - StripPrefix=1
   data:

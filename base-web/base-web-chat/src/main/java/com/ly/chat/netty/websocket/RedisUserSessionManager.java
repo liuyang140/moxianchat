@@ -107,6 +107,7 @@ public class RedisUserSessionManager {
 
     /** 更新用户活跃时间 */
     public void updateLastActiveTime(Long userId, long timestamp) {
+        ChannelManager.refreshLastActiveTime(userId);
         redisUtils.set(LAST_ACTIVE_PREFIX + userId, String.valueOf(timestamp), 300);
     }
 
@@ -153,6 +154,9 @@ public class RedisUserSessionManager {
                 redisUtils.expire(ROOM_KEY_PREFIX + roomId, ttl, unit);
             }
         }
+
+        // 3. 刷新用户活跃时间
+        this.updateLastActiveTime(userId, System.currentTimeMillis());
     }
 
     public void saveRoomUser(Long roomId, Long userId) {

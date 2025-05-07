@@ -7,13 +7,13 @@ import lombok.Data;
 @Schema(description = "缓存用户信息")
 public class CacheUserDTO {
     @Schema(description = "缓存用户id")
-    private String id;
+    private Long id;
 
     @Schema(description = "客户昵称")
     private String nickname;
 
     @Schema(description = "性别")
-    private String gender;
+    private Integer gender;
 
     @Schema(description = "头像")
     private String avatarUrl;

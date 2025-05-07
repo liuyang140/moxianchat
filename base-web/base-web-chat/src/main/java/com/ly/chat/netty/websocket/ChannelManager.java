@@ -3,15 +3,20 @@ package com.ly.chat.netty.websocket;
 import io.netty.channel.Channel;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ChannelManager {
 
     private static final Map<Long, Channel> USER_CHANNEL_MAP = new ConcurrentHashMap<>();
     private static final Map<Long, Long> LAST_ACTIVE_TIME_MAP = new ConcurrentHashMap<>();
     private static final Map<Long, Set<Long>> ROOM_USER_MAP = new ConcurrentHashMap<>();
+
+    private static final Lock lock = new ReentrantLock();
 
     public static void joinRoom(Long roomId, Long userId) {
         ROOM_USER_MAP.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(userId);
@@ -31,7 +36,12 @@ public class ChannelManager {
         return ROOM_USER_MAP.getOrDefault(roomId, Collections.emptySet());
     }
     public static Map<Long, Channel> getAll() {
-        return USER_CHANNEL_MAP;
+        lock.lock();
+        try {
+            return new HashMap<>(USER_CHANNEL_MAP);  // 返回副本
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static void refreshLastActiveTime(Long customerId) {
@@ -43,7 +53,12 @@ public class ChannelManager {
     }
 
     public static void add(Long userId, Channel channel) {
-        USER_CHANNEL_MAP.put(userId, channel);
+        lock.lock();
+        try {
+            USER_CHANNEL_MAP.put(userId, channel);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static void remove(Channel channel) {
@@ -51,7 +66,12 @@ public class ChannelManager {
     }
 
     public static Channel get(Long userId) {
-        return USER_CHANNEL_MAP.get(userId);
+        lock.lock();
+        try {
+            return USER_CHANNEL_MAP.get(userId);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static boolean isOnline(Long userId) {

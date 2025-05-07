@@ -13,11 +13,11 @@ public class CustomerLoginVo {
     private String nickname;
 
     @Schema(description = "性别")
-    private String gender;
+    private Integer gender;
 
     @Schema(description = "头像")
     private String avatarUrl;
 
-    @Schema(description = "是否绑定手机号码")
-    private Boolean isBindPhone;
+    @Schema(description = "手机号码")
+    private String phone;
 }
