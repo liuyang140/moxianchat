@@ -16,9 +16,10 @@
     <modules>
         <module>base-common</module>
         <module>base-model</module>
-        <module>base-gateway</module>
+        <module>base-server-gateway</module>
         <module>base-service-client</module>
         <module>base-web</module>
+        <module>base-server-chat-ws</module>
     </modules>
     <version>1.0-SNAPSHOT</version>
 

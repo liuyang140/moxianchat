@@ -1,3 +1,4 @@
+/*
 package com.ly.chat.netty.config;
 
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
@@ -14,7 +15,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,4 +57,4 @@ public class NettyConfig {
             log.info("Netty 服务注册成功: web-chat-ws:10012");
         };
     }
-}
+}*/

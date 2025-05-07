@@ -1,3 +1,4 @@
+/*
 package com.ly.chat.netty.websocket;
 
 import io.netty.channel.Channel;
@@ -77,4 +78,4 @@ public class ChannelManager {
     public static boolean isOnline(Long userId) {
         return USER_CHANNEL_MAP.containsKey(userId);
     }
-}
+}*/

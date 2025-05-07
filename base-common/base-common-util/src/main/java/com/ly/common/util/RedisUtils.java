@@ -1,5 +1,6 @@
 package com.ly.common.util;
 
+import com.ly.common.constant.RedisConstant;
 import com.ly.model.vo.customer.MatchUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
@@ -9,16 +10,12 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.sql.Time;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static com.ly.common.constant.RedisConstant.GEO_KEY;
 
 @Component
 public class RedisUtils {
@@ -103,17 +100,17 @@ public class RedisUtils {
     }
 
     public void saveUserLocation(Long userId, double latitude, double longitude) {
-        redisTemplate.opsForGeo().add(GEO_KEY, new Point(longitude, latitude), String.valueOf(userId));
-        redisTemplate.expire(GEO_KEY, Duration.ofHours(24));
+        redisTemplate.opsForGeo().add(RedisConstant.GEO_KEY, new Point(longitude, latitude), String.valueOf(userId));
+        redisTemplate.expire(RedisConstant.GEO_KEY, Duration.ofHours(24));
     }
 
 
     public List<MatchUserVo> searchNearby(Long userId, double radiusKm) {
-        List<Point> points = redisTemplate.opsForGeo().position(GEO_KEY, String.valueOf(userId));
+        List<Point> points = redisTemplate.opsForGeo().position(RedisConstant.GEO_KEY, String.valueOf(userId));
         if (points == null || points.isEmpty() || points.get(0) == null) return Collections.emptyList();
 
         GeoResults<RedisGeoCommands.GeoLocation<String>> results = redisTemplate.opsForGeo().radius(
-                GEO_KEY,
+                RedisConstant.GEO_KEY,
                 new Circle(points.get(0), new Distance(radiusKm, RedisGeoCommands.DistanceUnit.KILOMETERS)),
                 RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().includeDistance().sortAscending()
         );

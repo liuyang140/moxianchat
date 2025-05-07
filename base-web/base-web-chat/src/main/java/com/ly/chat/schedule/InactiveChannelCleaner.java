@@ -1,3 +1,4 @@
+/*
 package com.ly.chat.schedule;
 
 import com.ly.chat.netty.websocket.ChannelManager;
@@ -34,4 +35,4 @@ public class InactiveChannelCleaner {
             }
         }
     }
-}
+}*/

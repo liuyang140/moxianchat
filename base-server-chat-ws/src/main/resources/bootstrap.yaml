@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: server-chat-ws
+  main:
+    web-application-type: none
+  profiles:
+    active: dev  # 或启动时通过 --spring.profiles.active=prod
+

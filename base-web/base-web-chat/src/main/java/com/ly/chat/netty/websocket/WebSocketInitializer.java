@@ -1,3 +1,4 @@
+/*
 package com.ly.chat.netty.websocket;
 
 import com.ly.chat.netty.handler.WebSocketHandler;
@@ -24,4 +25,4 @@ public class WebSocketInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new WebSocketServerProtocolHandler("/chat"));
         pipeline.addLast(webSocketHandler); // 注意不能 new
     }
-}
+}*/

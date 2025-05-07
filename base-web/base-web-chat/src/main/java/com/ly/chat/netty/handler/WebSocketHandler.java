@@ -1,3 +1,4 @@
+/*
 package com.ly.chat.netty.handler;
 
 import com.alibaba.fastjson.JSON;
@@ -37,7 +38,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         log.info("客户端连接: {}", ctx.channel().id().asLongText());
     }
 
-    /*
+    */
+/*
     消息格式
     {
       "type": 0,        // 类型：chat-0、bind-1、recall-2、ping-3、login -4
@@ -51,7 +53,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
       "messageId": 123456789 // 消息ID
       "messageStatus": 0 // 消息状态 0-正常，1-撤回
     }
-    * */
+    * *//*
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) {
         log.info("收到消息: {}", msg.text());
@@ -78,13 +81,15 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        /*  Channel channel = ctx.channel();
+        */
+/*  Channel channel = ctx.channel();
         Long userId = CHANNEL_USER_MAP.remove(channel.id());
         if (userId != null) {
             ChannelManager.remove(channel);
             sessionManager.offline(userId);// 只清除连接状态，保留房间关系，支持断线重连
             log.info("用户 {} 下线", userId);
-        }*/
+        }*//*
+
         safeRemove(ctx);
     }
 
@@ -101,13 +106,15 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         super.channelInactive(ctx);
     }
 
-    /*
+    */
+/*
     * {
           "type": 4,
           "roomId": 123,
           "userId": 1001
         }
-    * */
+    * *//*
+
     private void handleJoinRoom(ChannelHandlerContext ctx, JSONObject json) {
         Long roomId = json.getLong("roomId");
         Long userId = json.getLong("userId");
@@ -139,14 +146,16 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     }
 
 
-    /*
+    */
+/*
     * {
           "type": 4,
           "customerId": 1234,
           "timestamp": 1714976542000
        }
        10-20秒发送一次心跳包
-    * */
+    * *//*
+
     private void handlePing(ChannelHandlerContext ctx, JSONObject json) {
         Long customerId = json.getLong("customerId");
         ChannelManager.refreshLastActiveTime(customerId); // 更新活跃时间
@@ -156,24 +165,28 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         sendSuccess(ctx,ChatEventTypeEnum.PING,null, "pong");
     }
 
-    /*
+    */
+/*
       {
           "type": 2,
           "messageId": 12345,
           "roomId": 1001,
           "senderId": 2001
       }
-   */
+   *//*
+
     private void handleRecall(ChannelHandlerContext ctx, JSONObject json) {
         chatMessageService.recallMessage(json);
     }
 
-    /*
+    */
+/*
       {
           "type": 1,
           "senderId": 2001
       }
-    */
+    *//*
+
     private void handleBind(ChannelHandlerContext ctx, JSONObject json) {
         Long userId = json.getLong("senderId");
         Channel newChannel = ctx.channel();
@@ -228,7 +241,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         ), isReconnect ? "重连成功" : "绑定成功");
     }
 
-    /*
+    */
+/*
     {
       "type": 0,
       "chatType": 0,
@@ -239,7 +253,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
       "messageType": 0,
       "timestamp": 1688888888
     }
-    * */
+    * *//*
+
     private void handleChat(ChannelHandlerContext ctx, JSONObject json) {
         if (sessionManager.getChannelId(json.getLong("senderId")) == null) {
             sendFail(ctx, "请先绑定用户");
@@ -275,9 +290,11 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         log.info("安全移除用户 {}，channel {}", userId, channelId.asLongText());
     }
 
-    /**
+    */
+/**
      * 统一发送 WebSocket 响应
-     */
+     *//*
+
     public static void sendSuccess(ChannelHandlerContext ctx, ChatEventTypeEnum type, Object data, String msg) {
         sendWsResult(ctx, WsResult.ok(type.getValue(), data, msg));
     }
@@ -298,4 +315,4 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         oldChannel.writeAndFlush(new TextWebSocketFrame(json));
     }
 
-}
+}*/

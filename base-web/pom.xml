@@ -34,7 +34,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-
         <!-- 服务调用feign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -73,9 +72,5 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
     </dependencies>
 </project>

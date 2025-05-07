@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableFeignClients(basePackages = "com.ly")
 @RefreshScope
 @MapperScan(basePackages = {"com.ly.chat.mapper"})
-@EnableScheduling
+//@EnableScheduling
 public class WebChatApplication {
 
     public static void main(String[] args) {

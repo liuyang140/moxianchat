@@ -1,6 +1,5 @@
 package com.ly.gateway.filter;
 
-import com.alibaba.nacos.shaded.com.google.common.collect.Lists;
 import com.ly.common.constant.RedisConstant;
 import com.ly.common.constant.SystemConstant;
 import com.ly.common.util.JwtUtils;
@@ -18,7 +17,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -29,7 +27,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     private RedisUtils redisUtils;
 
     //白名单繁琐且变化时切换为配置
-    public static final List<String> FILTER_LIST = Arrays.asList("/login", "/register","/wxLogin","chat-ws");
+    public static final List<String> FILTER_LIST = Arrays.asList("/login", "/register","/wxLogin");
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

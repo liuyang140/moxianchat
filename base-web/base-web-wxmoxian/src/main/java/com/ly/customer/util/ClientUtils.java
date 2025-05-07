@@ -1,6 +1,6 @@
 package com.ly.customer.util;
 
-import com.ly.chat.client.ChatRoomFeignClient;
+import com.ly.chat.client.WebChatFeignClient;
 import com.ly.common.execption.LyException;
 import com.ly.common.result.Result;
 import com.ly.common.result.ResultCodeEnum;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 public class ClientUtils {
 
     @Autowired
-    private ChatRoomFeignClient roomFeignClient;
+    private WebChatFeignClient roomFeignClient;
 
-    public MatchUserVo createRoom(Long customerId,MatchUserVo matchUserVo){
+    public MatchUserVo createRoom(Long customerId , MatchUserVo matchUserVo){
         RoomCreateDTO roomCreateDTO = new RoomCreateDTO();
         roomCreateDTO.setCustomerId(customerId);
         roomCreateDTO.setTargetCustomer(matchUserVo);

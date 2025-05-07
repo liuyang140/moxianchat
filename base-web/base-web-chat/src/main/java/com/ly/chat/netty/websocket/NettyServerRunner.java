@@ -1,3 +1,4 @@
+/*
 package com.ly.chat.netty.websocket;
 
 import com.ly.chat.netty.server.NettyServer;
@@ -16,4 +17,4 @@ public class NettyServerRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         nettyServer.start();
     }
-}
+}*/

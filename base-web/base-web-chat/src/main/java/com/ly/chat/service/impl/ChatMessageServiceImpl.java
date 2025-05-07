@@ -1,31 +1,26 @@
 package com.ly.chat.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ly.chat.mapper.ChatMessageMapper;
 import com.ly.chat.mapper.ChatRoomMapper;
-import com.ly.chat.netty.websocket.ChannelManager;
 import com.ly.chat.service.ChatMessageService;
-import com.ly.common.result.WsResult;
 import com.ly.model.dto.chat.ChatMessageDTO;
+import com.ly.model.dto.chat.UpdateMessageDTO;
 import com.ly.model.entity.chat.ChatMessage;
 import com.ly.model.enums.ChatEventTypeEnum;
 import com.ly.model.enums.ChatMessageStatusEnum;
-import com.ly.model.enums.ChatTypeEnum;
+import com.ly.model.enums.ChatRecallStatusEnum;
 import com.ly.model.vo.base.PageVo;
 import com.ly.model.vo.chat.ChatMessageVo;
-import io.netty.channel.Channel;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -39,21 +34,29 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
 
     @Transactional(rollbackFor = Exception.class )
     @Override
-    public void saveAndForward(JSONObject json) {
-        ChatMessageDTO dto = json.toJavaObject(ChatMessageDTO.class);
+    public void saveMessages(UpdateMessageDTO uDto) {
+//        ChatMessageDTO dto = json.toJavaObject(ChatMessageDTO.class);
+        List<ChatMessage> chatMessageList = CollUtil.newArrayList();
+        uDto.getChatMessageDTOList().forEach(dto -> {
+            // 持久化消息
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.setRoomId(dto.getRoomId());
+            chatMessage.setSenderId(dto.getSenderId());
+            chatMessage.setContent(dto.getContent());
+            chatMessage.setMessageType(dto.getMessageType());
+            chatMessage.setTimestamp(dto.getTimestamp());
+            chatMessage.setRecalled(dto. getMessageStatus());
+            chatMessage.setChatType(dto.getChatType());
+            chatMessage.setReceiverId(dto.getReceiverId());
+            chatMessageList.add(chatMessage);
+//            chatMessageMapper.insert(chatMessage);
+        });
+        this.saveBatch(chatMessageList);
 
-        // 持久化消息
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setRoomId(dto.getRoomId());
-        chatMessage.setSenderId(dto.getSenderId());
-        chatMessage.setContent(dto.getContent());
-        chatMessage.setMessageType(dto.getMessageType());
-        chatMessage.setTimestamp(dto.getTimestamp());
-        chatMessage.setRecalled(dto. getMessageStatus());
-        chatMessage.setChatType(dto.getChatType());
-        chatMessage.setReceiverId(dto.getReceiverId());
-        chatMessageMapper.insert(chatMessage);
+//        forwardMessage(dto);
+    }
 
+    /*private void forwardMessage(ChatMessageDTO dto) {
         // 转发消息（私聊）
         if (Objects.equals(dto.getChatType(), ChatTypeEnum.PRIVATE.getValue())) {
             Channel receiverChannel = ChannelManager.get(dto.getReceiverId());
@@ -75,33 +78,46 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                 }
             }
         }
-    }
+    }*/
 
     @Transactional(rollbackFor = Exception.class )
     @Override
-    public void recallMessage(JSONObject json) {
-        ChatMessageDTO chatMessageDTO = json.toJavaObject(ChatMessageDTO.class);
+    public List<ChatMessageDTO> recallMessages(UpdateMessageDTO uDto) {
+//        ChatMessageDTO chatMessageDTO = json.toJavaObject(ChatMessageDTO.class);
 
-        ChatMessage message = this.getById(chatMessageDTO.getMessageId());
-        if (message == null || !Objects.equals(message.getSenderId(), chatMessageDTO.getSenderId())) {
-            log.info("非法撤回尝试：{}", json);
-            return;
-        }
+        List<ChatMessage> chatMessageList = CollUtil.newArrayList();
+        List<ChatMessageDTO> chatMessageDTOList = CollUtil.toList();
+        uDto.getChatMessageDTOList().forEach(chatMessageDTO -> {
+            ChatMessage message = this.getById(chatMessageDTO.getMessageId());
+            if (message == null || !Objects.equals(message.getSenderId(), chatMessageDTO.getSenderId())) {
+                log.info("非法撤回尝试：{}", chatMessageDTO);
+                return;
+            }
 
-        // 更新数据库
-        message.setRecalled(ChatMessageStatusEnum.READ.getValue());
-        this.updateById(message);
+            // 更新数据库
+            message.setRecalled(ChatRecallStatusEnum.RECALL.getValue());
+            chatMessageList.add(message);
 
-        // 构造撤回通知消息
-        ChatMessageDTO recallNotice = new ChatMessageDTO();
-        recallNotice.setType(ChatEventTypeEnum.RECALL.getValue());
-        recallNotice.setMessageId(chatMessageDTO.getMessageId());
-        recallNotice.setRoomId(chatMessageDTO.getRoomId());
-        recallNotice.setSenderId(chatMessageDTO.getSenderId());
-        recallNotice.setContent("消息已被撤回");
+            // 构造撤回通知消息
+            ChatMessageDTO recallNotice = new ChatMessageDTO();
+            recallNotice.setType(ChatEventTypeEnum.RECALL.getValue());
+            recallNotice.setChatType(chatMessageDTO.getChatType());
+            recallNotice.setMessageId(chatMessageDTO.getMessageId());
+            recallNotice.setRoomId(chatMessageDTO.getRoomId());
+            recallNotice.setSenderId(chatMessageDTO.getSenderId());
+            recallNotice.setReceiverId(chatMessageDTO.getReceiverId());
+            recallNotice.setContent("消息已被撤回");
+            chatMessageDTOList.add(recallNotice);
+        });
+        this.updateBatchById(chatMessageList);
+        return chatMessageDTOList;
 
         // 广播给房间内所有其他成员
-        List<Long> members = chatRoomMapper.getRoomMemberIds(chatMessageDTO.getRoomId());
+//        List<Long> members = chatRoomMapper.getRoomMemberIds(chatMessageDTO.getRoomId());
+//        sendMesseageAll(members, chatMessageDTO, recallNotice);
+    }
+
+/*    private void sendMesseageAll(List<Long> members, ChatMessageDTO chatMessageDTO, ChatMessageDTO recallNotice) {
         for (Long memberId : members) {
             if (memberId.equals(chatMessageDTO.getSenderId())) continue;
 
@@ -110,7 +126,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                 ch.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(WsResult.ok(ChatEventTypeEnum.RECALL.getValue(), recallNotice))));
             }
         }
-    }
+    }*/
 
     @Override
     public PageVo<ChatMessageVo> getHistoryMessage(Long roomId, Integer page, Integer size){
@@ -123,6 +139,11 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
                     .setRecords(messages);
             return result;
 
+    }
+
+    @Override
+    public List<Long> getRoomUserIds(Long roomId) {
+        return chatRoomMapper.getRoomMemberIds(roomId);
     }
 
 }

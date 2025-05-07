@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        namespace: ee974e3b-097f-414b-b615-c1c7eb5404c7
+        group: DEFAULT_GROUP
+      discovery:
+        namespace: ee974e3b-097f-414b-b615-c1c7eb5404c7
+        group: DEFAULT_GROUP
+      #      server-addr: 117.72.125.187:8848
+        port: 10012
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+  config:
+    import:
+      - nacos:server-chat-ws-prod.yaml?group=DEFAULT_GROUP&namespace=ee974e3b-097f-414b-b615-c1c7eb5404c7
+
+# netty.websocket.ping-interval
+netty:
+#  port: 10012
+  websocket:
+    ping-interval: 30

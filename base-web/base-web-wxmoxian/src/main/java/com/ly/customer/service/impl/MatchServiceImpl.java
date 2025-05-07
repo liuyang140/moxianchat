@@ -75,7 +75,10 @@ public class MatchServiceImpl implements MatchService {
         double radius = initRadius;
 
         MatchUserVo matchUserVo = null;
-        while (radius <= maxRadius) {
+        /*if (maxRadius > 100.0){
+            maxRadius = 100.0;
+        }*/
+        while (radius <= maxRadius) {//暂未设置循环最大限制或最大距离限制，若请求发起距离过长可能导致服务器长时间循环
             // Redis匹配
             List<MatchUserVo> nearby = redisUtil.searchNearby(customerId, radius);
             if (!nearby.isEmpty()) {

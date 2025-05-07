@@ -10,5 +10,5 @@ public interface MatchService {
 
      void updateLocation(Long customerId, double latitude, double longitude);
 
-    MatchUserVo matchUser(Long customerId, Double initKm, Double maxKm, Double stepKm);
+     MatchUserVo matchUser(Long customerId, Double initKm, Double maxKm, Double stepKm);
 }
