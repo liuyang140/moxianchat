@@ -278,11 +278,11 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     /**
      * 统一发送 WebSocket 响应
      */
-    private void sendSuccess(ChannelHandlerContext ctx, ChatEventTypeEnum type, Object data, String msg) {
+    public static void sendSuccess(ChannelHandlerContext ctx, ChatEventTypeEnum type, Object data, String msg) {
         sendWsResult(ctx, WsResult.ok(type.getValue(), data, msg));
     }
 
-    private void sendFail(ChannelHandlerContext ctx, String message) {
+    public static void sendFail(ChannelHandlerContext ctx, String message) {
         if (ctx.channel().isActive()) {
             sendWsResult(ctx, WsResult.fail(-1, message));
         }

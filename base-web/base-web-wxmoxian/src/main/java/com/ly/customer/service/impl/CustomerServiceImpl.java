@@ -28,7 +28,6 @@ import java.util.Objects;
 
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class)
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, CustomerInfo>  implements CustomerService {
 
@@ -41,6 +40,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 	@Autowired
 	private CustomerLoginLogMapper customerLoginLogMapper;
 
+
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public String login(String code) {
 
@@ -65,6 +66,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 		return customerInfoVo;
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateCustomerInfo(UpdateCustomerDTO updateCustomerDTO) {
 		Long id = updateCustomerDTO.getId();

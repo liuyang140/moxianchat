@@ -29,7 +29,6 @@ import java.util.Set;
 
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class )
 public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatMessage> implements ChatMessageService {
 
     @Autowired
@@ -38,6 +37,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
     @Autowired
     private ChatRoomMapper chatRoomMapper;
 
+    @Transactional(rollbackFor = Exception.class )
     @Override
     public void saveAndForward(JSONObject json) {
         ChatMessageDTO dto = json.toJavaObject(ChatMessageDTO.class);
@@ -77,6 +77,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         }
     }
 
+    @Transactional(rollbackFor = Exception.class )
     @Override
     public void recallMessage(JSONObject json) {
         ChatMessageDTO chatMessageDTO = json.toJavaObject(ChatMessageDTO.class);

@@ -11,6 +11,7 @@ import com.ly.model.enums.ChatTypeEnum;
 import com.ly.model.vo.customer.MatchUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,8 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
      * @param target 目标用户VO（至少含 customerId 和距离）
      * @return 带房间ID的 MatchUserVo
      */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
     public MatchUserVo createRoom(Long userId, MatchUserVo target) {
         Long targetId = target.getCustomerId();
 

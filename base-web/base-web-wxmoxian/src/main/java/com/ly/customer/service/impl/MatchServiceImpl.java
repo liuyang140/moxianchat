@@ -20,7 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
 @Slf4j
 public class MatchServiceImpl implements MatchService {
 
@@ -42,6 +41,8 @@ public class MatchServiceImpl implements MatchService {
     @Autowired
     private ClientUtils clientUtils;
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
     public void updateLocation(Long customerId, double latitude, double longitude) {
 
         CustomerInfo customerInfo = customerService.getById(customerId);

@@ -5,9 +5,7 @@ import com.ly.customer.mapper.CustomerLocationMapper;
 import com.ly.customer.service.CustomerLocationService;
 import com.ly.model.entity.customer.CustomerLocation;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
-public class CustomerLocationServiceImpl  extends ServiceImpl<CustomerLocationMapper, CustomerLocation> implements CustomerLocationService {
+public class CustomerLocationServiceImpl extends ServiceImpl<CustomerLocationMapper, CustomerLocation> implements CustomerLocationService {
 }
