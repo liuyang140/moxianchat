@@ -3,7 +3,6 @@ package com.ly.chatws.util;
 import cn.hutool.core.collection.CollUtil;
 import com.ly.chat.client.WebChatFeignClient;
 import com.ly.common.result.Result;
-import com.ly.common.util.AuthContextHolder;
 import com.ly.model.dto.chat.ChatMessageDTO;
 import com.ly.model.dto.chat.UpdateMessageDTO;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,7 +24,7 @@ public class ClientUtils {
      * 批量保存消息
      * */
     public Boolean saveMessages(UpdateMessageDTO uDto) {
-        Result<List<ChatMessageDTO>> result = executeWithToken(
+        Result<List<ChatMessageDTO>> result = executeWithException(
                 () -> chatFeign.saveMessages(uDto),
                 "保存消息"
         );
@@ -40,7 +39,7 @@ public class ClientUtils {
      * 批量撤回消息
      * */
     public List<ChatMessageDTO> reCallMessages(UpdateMessageDTO uDto,ChannelHandlerContext ctx) {
-        Result<List<ChatMessageDTO>> result = executeWithToken(
+        Result<List<ChatMessageDTO>> result = executeWithException(
                 () -> chatFeign.recallMessages(uDto),
                 "撤回消息"
         );
@@ -55,7 +54,7 @@ public class ClientUtils {
      * 根据房间id获取房间内所有用户id
      * */
     public List<Long> getRoomUserIds(Long roomId,ChannelHandlerContext ctx){
-        Result<List<Long>> result = executeWithToken(
+        Result<List<Long>> result = executeWithException(
                 () -> chatFeign.getRoomUserIds(roomId),
                 "获取房间用户"
         );
@@ -69,7 +68,7 @@ public class ClientUtils {
     /*
     * 模版方法
     * */
-    public <T> T executeWithToken(Supplier<T> action, String errorMessage) {
+    public <T> T executeWithException(Supplier<T> action, String errorMessage) {
         try {
             return action.get();
         } catch (Exception e) {
