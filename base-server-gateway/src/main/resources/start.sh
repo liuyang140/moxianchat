@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 配置项
-JAR_NAME="base-gateway.jar"
+JAR_NAME="base-server-gateway.jar"
 PORT=8600
 PROFILE="prod"
 

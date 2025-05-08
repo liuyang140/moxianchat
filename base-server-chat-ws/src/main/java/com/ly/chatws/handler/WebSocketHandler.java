@@ -47,6 +47,16 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         log.info("客户端连接: {}", ctx.channel().id().asLongText());
     }
 
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        try {
+            AuthContextHolder.setContext(ctx);
+            super.channelRead(ctx, msg); // 继续传递到业务层
+        } finally {
+            AuthContextHolder.clearContext();
+        }
+    }
+
     /*
     消息格式
     {
@@ -263,7 +273,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
             return;
         }
         ChatMessageDTO dto = json.toJavaObject(ChatMessageDTO.class);
-        if(clientUtils.saveMessages(new UpdateMessageDTO().setChatMessageDTOList(CollUtil.toList(dto)),ctx)){
+        if(clientUtils.saveMessages(new UpdateMessageDTO().setChatMessageDTOList(CollUtil.toList(dto)))){
             this.forwardMessage(dto, ctx);
         }
         // 持久化 + 转发

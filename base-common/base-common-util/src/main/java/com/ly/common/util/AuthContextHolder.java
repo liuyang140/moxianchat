@@ -1,12 +1,14 @@
 package com.ly.common.util;
 
+import io.netty.channel.ChannelHandlerContext;
+
 /**
  * 获取当前用户信息帮助类
  */
 public class AuthContextHolder {
 
     private static final ThreadLocal<Long> USERID_HOLDER = new ThreadLocal<Long>();
-    private static final ThreadLocal<String> TOKEN_HOLDER= new ThreadLocal<>();
+    private static final ThreadLocal<ChannelHandlerContext> CONTEXT_HOLDER = new ThreadLocal<>();
 
     public static void setUserId(Long _userId) {
         USERID_HOLDER.set(_userId);
@@ -21,16 +23,15 @@ public class AuthContextHolder {
     }
 
 
-    public static void setToken(String token) {
-        TOKEN_HOLDER.set(token);
+    public static void setContext(ChannelHandlerContext ctx) {
+        CONTEXT_HOLDER.set(ctx);
     }
 
-    public static String getToken() {
-        return TOKEN_HOLDER.get();
+    public static ChannelHandlerContext getContext() {
+        return CONTEXT_HOLDER.get();
     }
 
-    public static void clearToken() {
-        TOKEN_HOLDER.remove();
+    public static void clearContext() {
+        CONTEXT_HOLDER.remove();
     }
-
 }

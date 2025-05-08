@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JAR_NAME="base-sever-chat-ws.jar"
+JAR_NAME="base-server-chat-ws.jar"
 PORT=10012
 PROFILE="prod"
 

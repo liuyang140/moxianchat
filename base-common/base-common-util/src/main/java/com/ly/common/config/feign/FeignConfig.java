@@ -1,7 +1,10 @@
 package com.ly.common.config.feign;
 
+import com.ly.common.constant.SystemConstant;
 import com.ly.common.util.AuthContextHolder;
 import feign.RequestInterceptor;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +30,10 @@ public class FeignConfig {
 
             // 如果不是 HTTP 请求线程（比如 Netty 调用 Feign），从 AuthContextHolder 拿
             if (token == null || token.isEmpty()) {
-                token = AuthContextHolder.getToken();
+                ChannelHandlerContext context = AuthContextHolder.getContext();
+                if (context != null) {
+                    token = (String) context.channel().attr(AttributeKey.valueOf(SystemConstant.TOKEN)).get();;
+                }
             }
 
             if (token != null && !token.isEmpty()) {
