@@ -2,12 +2,10 @@ package com.ly.chat.controller;
 
 import com.ly.chat.service.ChatRoomService;
 import com.ly.common.result.Result;
-import com.ly.common.util.AuthContextHolder;
 import com.ly.model.dto.chat.RoomCreateDTO;
 import com.ly.model.vo.chat.UserRoomUnreadMessagesVO;
 import com.ly.model.vo.customer.CustomerUserVo;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -105,6 +105,7 @@ public class ClientUtils {
         } else {
             log.error("更新最后已读状态失败: {}", result != null ? result.getMessage() : "未知错误");
         }
+        return Boolean.FALSE;
     }
 
     /*
