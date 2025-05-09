@@ -8,6 +8,7 @@ import com.ly.chat.mapper.ChatRoomUserMapper;
 import com.ly.chat.service.ChatRoomService;
 import com.ly.chat.service.ChatRoomUserService;
 import com.ly.chat.utils.ClientUtils;
+import com.ly.common.util.AuthContextHolder;
 import com.ly.model.dto.chat.ChatMessageDTO;
 import com.ly.model.dto.chat.UnreadCountDTO;
 import com.ly.model.entity.chat.ChatMessage;
@@ -104,7 +105,8 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
     }
 
     @Override
-    public UserRoomUnreadMessagesVO getUnreadMessagesByUser(Long userId) {
+    public UserRoomUnreadMessagesVO getUnreadMessagesByUser() {
+        Long userId = AuthContextHolder.getUserId();
         ChatRoomMapper chatRoomMapper = this.getBaseMapper();
         // 获取用户加入的房间ID
         List<Long> roomIds = chatRoomMapper.getRoomIdsByUser(userId);
@@ -114,7 +116,6 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
 
         // 获取每个房间的最新消息
         List<ChatMessage> latestMessageList = chatMessageMapper.getLatestMessagesByRoomIds(roomIds);
-
 
         List<Long> userIds = chatRoomMapper.getRoomsMemberIdsByType(roomIds, ChatTypeEnum.PRIVATE.getValue());
         //用户信息

@@ -13,10 +13,14 @@ public enum ChatEventTypeEnum {
     PING(3, "心跳包"),
     JOIN_GROUP_ROOM(4, "加入群聊房间"),
     LEAVE_GROUP_ROOM(5, "离开群聊房间"),
-    ONLINE_USERS(6, "推送当前房间在线用户列表"),
-    KICK(7, "用户重连"),
-    UNREAD_PUSH(8,"未读消息推送" ),
-    UNREAD_COUNT_PUSH(9,"未读消息总数统计推送" );
+    JOIN_PRIVATE_ROOM(6, "加入私聊房间"),
+    LEAVE_PRIVATE_ROOM(7, "离开私聊房间"),
+    ONLINE_USERS(8, "推送当前房间在线用户列表"),
+    KICK(9, "用户重连"),
+    UNREAD_PUSH(10,"未读消息推送" ),
+    UNREAD_COUNT_PUSH(11,"未读消息总数统计推送" )
+    ;
+
 
     private Integer value;
     private String comment;

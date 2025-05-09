@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @FeignClient(name = "web-chat",  configuration = FeignConfig.class)
@@ -36,4 +37,10 @@ public interface WebChatFeignClient {
     @GetMapping("/chatMessageRead/totalUnread")
     Result<Long> getTotalUnreadCount(@RequestParam Long userId);
 
-}
+    @PostMapping("/chatMessageRead/updateReadStatus")
+    Result<Boolean> updateReadStatus(@RequestParam(value = "roomId") Long roomId,
+                                            @RequestParam(value = "userId") Long userId,
+                                            @RequestParam(value = "lastReadTime") LocalDateTime lastReadTime);
+
+
+    }

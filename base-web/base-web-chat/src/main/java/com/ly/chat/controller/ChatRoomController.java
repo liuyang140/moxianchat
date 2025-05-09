@@ -2,6 +2,7 @@ package com.ly.chat.controller;
 
 import com.ly.chat.service.ChatRoomService;
 import com.ly.common.result.Result;
+import com.ly.common.util.AuthContextHolder;
 import com.ly.model.dto.chat.RoomCreateDTO;
 import com.ly.model.vo.chat.UserRoomUnreadMessagesVO;
 import com.ly.model.vo.customer.CustomerUserVo;
@@ -35,7 +36,7 @@ public class ChatRoomController {
 
     @Operation(summary = "获取用户所有房间的未读消息数和最新消息")
     @GetMapping("/unreadByUserId")
-    public Result<UserRoomUnreadMessagesVO> getUnreadMessagesByUserId(@Parameter(description = "用户ID", required = true) @RequestParam(value = "userId") Long userId) {
-        return Result.ok(chatRoomService.getUnreadMessagesByUser(userId));
+    public Result<UserRoomUnreadMessagesVO> getUnreadMessagesByUserId() {
+        return Result.ok(chatRoomService.getUnreadMessagesByUser());
     }
 }

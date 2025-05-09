@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -95,6 +96,17 @@ public class ClientUtils {
         return 0L;
     }
 
+    public Boolean updateLastReadTime(Long roomId, Long userId) {
+        Result<Boolean> result = executeWithException(() -> chatFeign.updateReadStatus(roomId, userId, LocalDateTime.now()),
+                "更新最后已读状态成功"
+        );
+        if (result != null && result.isOk()) {
+            return result.getData();
+        } else {
+            log.error("更新最后已读状态失败: {}", result != null ? result.getMessage() : "未知错误");
+        }
+    }
+
     /*
     * 模版方法
     * */
@@ -106,5 +118,6 @@ public class ClientUtils {
             return null;
         }
     }
+
 
 }

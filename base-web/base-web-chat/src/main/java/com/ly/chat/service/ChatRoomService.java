@@ -16,6 +16,6 @@ public interface ChatRoomService extends IService<ChatRoom> {
     /**
      * 获取用户所有房间的未读消息数和最新消息
      */
-    UserRoomUnreadMessagesVO getUnreadMessagesByUser(Long userId);
+    UserRoomUnreadMessagesVO getUnreadMessagesByUser();
 
 }

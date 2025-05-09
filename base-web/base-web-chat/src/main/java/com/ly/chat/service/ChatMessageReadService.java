@@ -19,7 +19,7 @@ public interface ChatMessageReadService extends IService<ChatMessageRead> {
     /**
      * 更新用户在聊天室的已读状态
      */
-    boolean updateReadStatus(Long roomId, Long userId, LocalDateTime lastReadTime);
+    Boolean updateReadStatus(Long roomId, Long userId, LocalDateTime lastReadTime);
 
     /**
      * 查询指定用户在指定房间的未读数量

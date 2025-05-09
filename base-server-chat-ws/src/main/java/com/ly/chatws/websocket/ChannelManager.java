@@ -32,6 +32,11 @@ public class ChannelManager {
         }
     }
 
+    public static boolean isInRoom(Long roomId, Long userId) {
+        Set<Long> users = ROOM_USER_MAP.get(roomId);
+        return users != null && users.contains(userId);
+    }
+
     public static Set<Long> getRoomUsers(Long roomId) {
         return ROOM_USER_MAP.getOrDefault(roomId, Collections.emptySet());
     }

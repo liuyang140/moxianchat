@@ -47,8 +47,11 @@ public class ChatMessageReadServiceImpl extends ServiceImpl<ChatMessageReadMappe
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean updateReadStatus(Long roomId, Long userId, LocalDateTime lastReadTime){        ChatMessageRead readStatus = lambdaQuery().eq(ChatMessageRead::getRoomId, roomId)
-                .eq(ChatMessageRead::getUserId,userId).one();
+    public Boolean updateReadStatus(Long roomId, Long userId, LocalDateTime lastReadTime){
+        ChatMessageRead readStatus = this.lambdaQuery()
+                .eq(ChatMessageRead::getRoomId, roomId)
+                .eq(ChatMessageRead::getUserId,userId)
+                .one();
         if (readStatus != null) {
             readStatus.setLastReadTime(lastReadTime);
             return updateById(readStatus);
@@ -58,7 +61,7 @@ public class ChatMessageReadServiceImpl extends ServiceImpl<ChatMessageReadMappe
             readStatus.setRoomId(roomId);
             readStatus.setUserId(userId);
             readStatus.setLastReadTime(lastReadTime);
-            return save(readStatus);
+            return this.save(readStatus);
         }
     }
 

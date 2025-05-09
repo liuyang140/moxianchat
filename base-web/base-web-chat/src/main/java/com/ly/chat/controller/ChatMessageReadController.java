@@ -73,10 +73,10 @@ public class ChatMessageReadController {
      */
     @Operation(summary = "更新用户在聊天室的已读状态")
     @PostMapping("/updateReadStatus")
-    public boolean updateReadStatus(@Parameter(description = "房间id") @RequestParam(value = "roomId") Long roomId,
+    public Result<Boolean> updateReadStatus(@Parameter(description = "房间id") @RequestParam(value = "roomId") Long roomId,
                                     @Parameter(description = "用户id") @RequestParam(value = "userId") Long userId,
                                     @Parameter(description = "最后阅读时间")  @RequestParam(value = "lastReadTime") LocalDateTime lastReadTime) {
-        return chatMessageReadService.updateReadStatus(roomId, userId, lastReadTime);
+        return Result.ok(chatMessageReadService.updateReadStatus(roomId, userId, lastReadTime));
     }
 
     @Operation(summary = "获取用户所有房间未读消息总数")

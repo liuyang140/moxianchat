@@ -91,6 +91,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
             case JOIN_GROUP_ROOM -> handleJoinRoom(ctx, json);
             case LEAVE_GROUP_ROOM -> handleLeaveRoom(ctx, json);
             case ONLINE_USERS -> handleOnlineUsers(ctx, json);
+            case JOIN_PRIVATE_ROOM -> handleJoinPrivateRoom(ctx, json);
+            case LEAVE_PRIVATE_ROOM -> handleLeavePrivateRoom(ctx, json);
             default -> sendFail(ctx,  "暂不支持的事件类型");
         }
     }
@@ -118,6 +120,57 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         safeRemove(ctx); // 复用原下线逻辑
         super.channelInactive(ctx);
+    }
+
+    /*
+    * {
+         "type": 6,
+         "roomId": 10001,
+         "senderId": 2001
+      }
+      TODO 注意：未读状态最好用缓存做，不用数据库，因为这个状态会变化，而且要实时更新，所以缓存比较合适
+    * */
+    private void handleJoinPrivateRoom(ChannelHandlerContext ctx, JSONObject json) {
+        Long roomId = json.getLong("roomId");
+        Long userId = json.getLong("senderId");
+
+        ChannelManager.joinRoom(roomId, userId);
+        sessionManager.joinRoom(roomId, userId);
+
+        clientUtils.updateLastReadTime(roomId, userId); // 通过 Feign 更新 last_read_time
+
+        // 刷新未读总数
+        Long totalUnread = clientUtils.getTotalUnreadCount(userId); // Feign 接口
+        sendSuccess(ctx, ChatEventTypeEnum.JOIN_PRIVATE_ROOM, Map.of("roomId", roomId), "进入房间成功");
+        sendSuccess(ctx, ChatEventTypeEnum.UNREAD_COUNT_PUSH, Map.of("totalUnread", totalUnread), "推送未读消息总数");
+    }
+
+    private void handleLeavePrivateRoom(ChannelHandlerContext ctx, JSONObject json) {
+        Long roomId = json.getLong("roomId");
+        Long userId = json.getLong("senderId");
+
+        // 移除房间关联
+        ChannelManager.leaveRoom(roomId, userId);
+        sessionManager.leaveRoom(roomId, userId); // 如果你有 Redis 中记录
+
+        // 更新已读时间
+        clientUtils.updateLastReadTime(roomId, userId);
+
+        // 推送未读总数
+        pushUnreadNotify(userId);
+
+        // 回复客户端
+        sendSuccess(ctx, ChatEventTypeEnum.LEAVE_PRIVATE_ROOM, null, "已退出房间");
+    }
+
+    private void pushUnreadNotify(Long userId) {
+        Long totalUnread = clientUtils.getTotalUnreadCount(userId);
+        Channel channel = ChannelManager.get(userId);
+        if (channel != null) {
+            WsResult<?> result = WsResult.ok(ChatEventTypeEnum.UNREAD_COUNT_PUSH.getValue(),
+                    Map.of("totalUnread", totalUnread), "未读总数更新");
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(result)));
+        }
     }
 
     /*
@@ -288,11 +341,37 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 //        chatMessageService.saveAndForward(json);
     }
 
-    //实时推送房间未读通知
+    //实时推送房间未读通知（不在房间才推送，在房间不推送）
     private void pushUnreadNotification(ChatMessageDTO savedDto) {
         Long roomId = savedDto.getRoomId();
         Long senderId = savedDto.getSenderId();
 
+        // 获取房间所有用户
+        List<Long> memberIds = clientUtils.getRoomUserIds(roomId);
+        if (CollUtil.isEmpty(memberIds)) return;
+
+        for (Long memberId : memberIds) {
+            if (memberId.equals(senderId)) continue; // 不推送给自己
+
+            // 判断该用户是否当前在该房间
+            boolean inRoom = ChannelManager.isInRoom(roomId, memberId);
+            if (inRoom) continue; // 正在看这个房间就不推送未读
+
+            // 获取 WebSocket 连接
+            Channel channel = ChannelManager.get(memberId);
+            if (channel != null) {
+                // 获取该用户的总未读数（feign 调用）
+                Long totalUnread = clientUtils.getTotalUnreadCount(memberId);
+
+                // 推送未读消息
+                sendWsResult(channel, WsResult.ok(
+                        ChatEventTypeEnum.UNREAD_PUSH.getValue(),
+                        Map.of("totalUnread", totalUnread),
+                        "未读消息提醒推送"
+                ));
+
+            }
+        }
     }
 
     private void forwardMessage(ChatMessageDTO dto , ChannelHandlerContext ctx) {
