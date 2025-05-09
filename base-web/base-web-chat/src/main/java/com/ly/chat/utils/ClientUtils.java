@@ -1,26 +1,27 @@
-package com.ly.customer.util;
+package com.ly.chat.utils;
 
-import com.ly.chat.client.WebChatFeignClient;
 import com.ly.common.execption.LyException;
 import com.ly.common.result.Result;
 import com.ly.common.result.ResultCodeEnum;
+import com.ly.customer.client.CustomerInfoFeignClient;
 import com.ly.model.dto.chat.RoomCreateDTO;
 import com.ly.model.vo.customer.CustomerUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ClientUtils {
 
     @Autowired
-    private WebChatFeignClient roomFeignClient;
+    private CustomerInfoFeignClient  customerInfoFeignClient;
 
-    public CustomerUserVo createRoom(Long customerId , CustomerUserVo customerUserVo){
-        RoomCreateDTO roomCreateDTO = new RoomCreateDTO();
-        roomCreateDTO.setCustomerId(customerId);
-        roomCreateDTO.setTargetCustomer(customerUserVo);
-
-        Result<CustomerUserVo> result = roomFeignClient.createRoom(roomCreateDTO);
+    /*
+    * 批量获取人员信息
+    * */
+    public List<CustomerUserVo> getBatchUserVos(List<Long> customerIds){
+        Result<List<CustomerUserVo>> result = customerInfoFeignClient.getBatchCustomerInfo(customerIds);
         if (result != null && result.isOk()) {
             return result.getData();
         } else {

@@ -5,7 +5,7 @@ import com.ly.common.result.Result;
 import com.ly.model.dto.chat.ChatMessageDTO;
 import com.ly.model.dto.chat.RoomCreateDTO;
 import com.ly.model.dto.chat.UpdateMessageDTO;
-import com.ly.model.vo.customer.MatchUserVo;
+import com.ly.model.vo.customer.CustomerUserVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ import java.util.List;
 public interface WebChatFeignClient {
 
     @PostMapping("/room/createRoom")
-    Result<MatchUserVo> createRoom(@RequestBody RoomCreateDTO roomCreateDTO);
+    Result<CustomerUserVo> createRoom(@RequestBody RoomCreateDTO roomCreateDTO);
 
     @PostMapping("/chatMessage/saveMessages")
     Result saveMessages(@RequestBody UpdateMessageDTO dto);
@@ -26,11 +26,13 @@ public interface WebChatFeignClient {
     @PostMapping("/chatMessage/recallMessages")
     Result<List<ChatMessageDTO>> recallMessages(@RequestBody UpdateMessageDTO dto);
 
-    @GetMapping("/chatMessage/getRoomUserIds")
+    @GetMapping("/room/getRoomUserIds")
     Result<List<Long>> getRoomUserIds(@RequestParam(value ="roomId") Long roomId);
 
     @GetMapping("/chatMessageRead/unreadCountOne")
     Result<Long> unreadCountOne(@RequestParam(value = "roomId") Long roomId,
                                        @RequestParam(value = "userId") Long userId);
 
-}
+    @GetMapping("/chatMessageRead/totalUnread")
+    public Result<Long> getTotalUnreadCount(@RequestParam Long userId);
+    }

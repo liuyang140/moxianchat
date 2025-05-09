@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ly.chat.mapper.ChatMessageMapper">
+    <sql id="Base_Column_List">
+        id,
+        room_id,
+        sender_id,
+        content,
+        message_type,
+        recalled,
+        timestamp,
+        chat_type,
+        receiver_id,
+        create_time,
+        update_time,
+        is_deleted
+    </sql>
 
     <select id="getHistoryMessages" resultType="com.ly.model.vo.chat.ChatMessageVo">
         SELECT id,
@@ -25,5 +39,25 @@
           AND is_deleted = 0
           AND recalled = 0
         ORDER BY create_time DESC
+    </select>
+    <select id="getLatestMessage" resultType="com.ly.model.entity.chat.ChatMessage">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM chat_message
+        WHERE room_id = #{roomId}
+          AND is_deleted = 0
+        ORDER BY create_time DESC
+            LIMIT 1;
+    </select>
+    <select id="getLatestMessagesByRoomIds" resultType="com.ly.model.entity.chat.ChatMessage">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM chat_message m
+                 JOIN (
+            SELECT room_id, MAX(create_time) AS max_time
+            FROM chat_message
+            WHERE room_id IN (${roomIds})
+            GROUP BY room_id
+        ) latest ON m.room_id = latest.room_id AND m.create_time = latest.max_time
     </select>
 </mapper>

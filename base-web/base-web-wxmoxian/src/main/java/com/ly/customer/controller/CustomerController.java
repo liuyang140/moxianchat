@@ -4,12 +4,16 @@ import com.ly.common.result.Result;
 import com.ly.customer.service.CustomerService;
 import com.ly.model.dto.customer.UpdateCustomerDTO;
 import com.ly.model.vo.customer.CustomerLoginVo;
+import com.ly.model.vo.customer.CustomerUserVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Tag(name = "用户API接口管理")
@@ -45,6 +49,15 @@ public class CustomerController {
 		customerService.updateCustomerInfo(updateCustomerDTO);
 		return Result.ok();
 	}
+
+	@Operation(summary = "批量获取用户信息")
+	@GetMapping("/getBatchCustomerInfo")
+	public Result<List<CustomerUserVo>> getBatchCustomerInfo(
+			@Parameter(description = "用户id列表", required = true) @RequestParam(value = "customerIds") List<Long> customerIds) {
+		List<CustomerUserVo> list = customerService.getBatchCustomerInfo(customerIds);
+		return Result.ok(list);
+	}
+
 
 }
 

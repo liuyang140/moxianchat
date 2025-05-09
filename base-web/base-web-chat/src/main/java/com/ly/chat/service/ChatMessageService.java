@@ -19,5 +19,4 @@ public interface ChatMessageService extends IService<ChatMessage> {
 
     PageVo<ChatMessageVo> getHistoryMessage(Long roomId, Integer page, Integer size);
 
-    List<Long> getRoomUserIds(Long roomId);
 }

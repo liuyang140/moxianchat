@@ -41,6 +41,4 @@ public class ChatMessage extends BaseEntity {
     private Long receiverId;
 
 
-
-
 }

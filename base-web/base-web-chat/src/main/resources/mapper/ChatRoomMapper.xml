@@ -2,6 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ly.chat.mapper.ChatRoomMapper">
     <select id="getRoomMemberIds" resultType="java.lang.Long">
-        SELECT user_id FROM chat_room_user WHERE room_id = #{roomId} AND is_deleted = 0
+        SELECT user_id
+        FROM chat_room_user
+        WHERE room_id = #{roomId} AND is_deleted = 0
+    </select>
+
+    <select id="getRoomsMemberIdsByType" resultType="java.lang.Long">
+        SELECT cru.user_id
+        FROM chat_room_user cru
+        JOIN chat_room cr ON cru.room_id = cr.id
+        WHERE cr.type = #{type}
+        AND cru.room_id IN
+        <foreach collection="roomIds" item="roomId" open="(" separator="," close=")">
+            #{roomId}
+        </foreach>
+        AND cru.is_deleted = 0
+    </select>
+
+    <select id="getRoomIdsByUser" resultType="java.lang.Long">
+        SELECT room_id
+        FROM chat_room_user
+        WHERE user_id = #{userId}
+          AND is_deleted = 0;
     </select>
 </mapper>

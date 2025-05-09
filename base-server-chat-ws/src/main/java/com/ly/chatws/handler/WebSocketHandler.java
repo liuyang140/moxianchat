@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ly.chatws.util.ClientUtils;
 import com.ly.chatws.websocket.ChannelManager;
 import com.ly.chatws.websocket.RedisUserSessionManager;
-import com.ly.common.constant.SystemConstant;
 import com.ly.common.result.ResultCodeEnum;
 import com.ly.common.result.WsResult;
 import com.ly.common.util.AuthContextHolder;
@@ -15,10 +14,8 @@ import com.ly.model.dto.chat.ChatMessageDTO;
 import com.ly.model.dto.chat.UpdateMessageDTO;
 import com.ly.model.enums.ChatEventTypeEnum;
 import com.ly.model.enums.ChatTypeEnum;
-import com.ly.model.vo.chat.ChatMessageUnReadVo;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.util.AttributeKey;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,6 +251,13 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
                 "reconnect", isReconnect,
                 "rooms", roomIds != null ? roomIds : Set.of()
         ), isReconnect ? "重连成功" : "绑定成功");
+
+
+        // 推送当前用户消息未读总数
+        Long totalUnread = clientUtils.getTotalUnreadCount(userId); // 通过 Feign 或本地 Service 实现
+        // 发送到客户端
+        sendSuccess(ctx, ChatEventTypeEnum.UNREAD_COUNT_PUSH,
+                Map.of("totalUnread", totalUnread), "初始化未读数");
     }
 
     /*
@@ -284,7 +288,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 //        chatMessageService.saveAndForward(json);
     }
 
-    //实时推送所有房间未读通知统计数量
+    //实时推送房间未读通知
     private void pushUnreadNotification(ChatMessageDTO savedDto) {
         Long roomId = savedDto.getRoomId();
         Long senderId = savedDto.getSenderId();

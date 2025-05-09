@@ -10,7 +10,7 @@ import com.ly.customer.mapper.CustomerLocationMapper;
 import com.ly.customer.service.*;
 import com.ly.model.entity.customer.CustomerInfo;
 import com.ly.model.entity.customer.CustomerLocation;
-import com.ly.model.vo.customer.MatchUserVo;
+import com.ly.model.vo.customer.CustomerUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,20 +69,20 @@ public class MatchServiceImpl implements MatchService {
      * 发起匹配请求
      */
     @Override
-    public MatchUserVo matchUser(Long customerId, Double initRadius, Double maxRadius, Double stepKm) {
+    public CustomerUserVo matchUser(Long customerId, Double initRadius, Double maxRadius, Double stepKm) {
 
         if(Objects.isNull(customerId)) customerId = userCacheUtils.getCustomerId();
         double radius = initRadius;
 
-        MatchUserVo matchUserVo = null;
+        CustomerUserVo customerUserVo = null;
         /*if (maxRadius > 100.0){
             maxRadius = 100.0;
         }*/
         while (radius <= maxRadius) {//暂未设置循环最大限制或最大距离限制，若请求发起距离过长可能导致服务器长时间循环
             // Redis匹配
-            List<MatchUserVo> nearby = redisUtil.searchNearby(customerId, radius);
+            List<CustomerUserVo> nearby = redisUtil.searchNearby(customerId, radius);
             if (!nearby.isEmpty()) {
-                matchUserVo = clientUtils.createRoom(customerId, randomPick(nearby));
+                customerUserVo = clientUtils.createRoom(customerId, randomPick(nearby));
                 break;
             }
 
@@ -98,32 +98,32 @@ public class MatchServiceImpl implements MatchService {
             );
 
             if (!dbMatches.isEmpty()) {
-                List<MatchUserVo> matchVos = dbMatches.stream()
-                        .map(loc -> new MatchUserVo().setCustomerId(loc.getCustomerId())
+                List<CustomerUserVo> matchVos = dbMatches.stream()
+                        .map(loc -> new CustomerUserVo().setCustomerId(loc.getCustomerId())
                                 .setDistanceKm(DistanceUtil.calculate(self.getLatitude(), self.getLongitude(), loc.getLatitude(), loc.getLongitude())))
                         .collect(Collectors.toList());
 
-                matchUserVo = clientUtils.createRoom(customerId, randomPick(matchVos));
+                customerUserVo = clientUtils.createRoom(customerId, randomPick(matchVos));
                 break;
             }
 
             radius += stepKm;
         }
 
-        if(Objects.nonNull(matchUserVo)){
-            CustomerInfo customerInfo = customerService.getById(matchUserVo.getCustomerId());
-            matchUserVo.setNickname(customerInfo.getNickname())
+        if(Objects.nonNull(customerUserVo)){
+            CustomerInfo customerInfo = customerService.getById(customerUserVo.getCustomerId());
+            customerUserVo.setNickname(customerInfo.getNickname())
                     .setAvatarUrl(customerInfo.getAvatarUrl())
                     .setGender(customerInfo.getGender())
                     .setPhone(customerInfo.getPhone());
         }
 
-        return matchUserVo;
+        return customerUserVo;
     }
 
 
 
-    private MatchUserVo randomPick(List<MatchUserVo> list) {
+    private CustomerUserVo randomPick(List<CustomerUserVo> list) {
         return list.get(new Random().nextInt(list.size()));
     }
 

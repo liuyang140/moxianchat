@@ -15,7 +15,8 @@ public enum ChatEventTypeEnum {
     LEAVE_GROUP_ROOM(5, "离开群聊房间"),
     ONLINE_USERS(6, "推送当前房间在线用户列表"),
     KICK(7, "用户重连"),
-    UNREAD_NOTIFY(8,"未读消息更新" );
+    UNREAD_PUSH(8,"未读消息推送" ),
+    UNREAD_COUNT_PUSH(9,"未读消息总数统计推送" );
 
     private Integer value;
     private String comment;

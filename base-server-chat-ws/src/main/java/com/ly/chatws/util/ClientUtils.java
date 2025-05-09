@@ -81,6 +81,21 @@ public class ClientUtils {
     }
 
     /*
+    * 统计用户所有聊天室未读消息总数
+    * */
+    public Long getTotalUnreadCount(Long userId) {
+        Result<Long> result = executeWithException(
+                () -> chatFeign.getTotalUnreadCount(userId),
+                "获取用户所有聊天室未读消息总数"
+        );
+        if (result != null && result.isOk()) {
+            return result.getData();
+        }
+        log.error("获取用户所有聊天室未读消息总数失败: {}", result != null ? result.getMessage() : "未知错误");
+        return 0L;
+    }
+
+    /*
     * 模版方法
     * */
     public <T> T executeWithException(Supplier<T> action, String errorMessage) {

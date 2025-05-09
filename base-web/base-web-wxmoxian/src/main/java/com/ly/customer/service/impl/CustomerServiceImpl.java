@@ -17,12 +17,15 @@ import com.ly.model.dto.user.CacheUserDTO;
 import com.ly.model.entity.customer.CustomerInfo;
 import com.ly.model.entity.customer.CustomerLoginLog;
 import com.ly.model.vo.customer.CustomerLoginVo;
+import com.ly.model.vo.customer.CustomerUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -78,6 +81,16 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 		this.updateById(customerInfo);
 		//更新缓存信息
 		userCacheUtils.cacheUser(id, BeanUtil.copyProperties(customerInfo, CacheUserDTO.class));
+	}
+
+	@Override
+	public List<CustomerUserVo> getBatchCustomerInfo(List<Long> customerIds) {
+		List<CustomerUserVo> result = new ArrayList<>();
+		List<CustomerInfo> customerInfos = this.listByIds(customerIds);
+		customerInfos.forEach(customerInfo -> {
+			result.add(CustomerUserVo.buildCommonUserVo(customerInfo));
+		});
+		return result;
 	}
 
 	private long getLoginCustomerId(String code) {

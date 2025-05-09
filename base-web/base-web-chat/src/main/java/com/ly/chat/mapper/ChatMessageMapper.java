@@ -19,4 +19,9 @@ public interface ChatMessageMapper extends BaseMapper<ChatMessage> {
     Long getHistoryMessagesCount(@Param("roomId") Long roomId,
                                            @Param("offset") int offset,
                                            @Param("size") int size);
+
+
+    ChatMessage getLatestMessage(@Param("roomId") Long roomId);
+
+    List<ChatMessage> getLatestMessagesByRoomIds(@Param("roomIds") List<Long> roomIds);
 }

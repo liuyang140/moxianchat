@@ -1,6 +1,6 @@
 package com.ly.model.dto.chat;
 
-import com.ly.model.vo.customer.MatchUserVo;
+import com.ly.model.vo.customer.CustomerUserVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ public class RoomCreateDTO {
     private Long customerId;
 
     @Schema(description = "目标用户")
-    private MatchUserVo targetCustomer;
+    private CustomerUserVo targetCustomer;
 
 
 }

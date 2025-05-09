@@ -1,7 +1,6 @@
 package com.ly.chat.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ly.chat.mapper.ChatMessageMapper;
 import com.ly.chat.mapper.ChatRoomMapper;
@@ -10,7 +9,6 @@ import com.ly.model.dto.chat.ChatMessageDTO;
 import com.ly.model.dto.chat.UpdateMessageDTO;
 import com.ly.model.entity.chat.ChatMessage;
 import com.ly.model.enums.ChatEventTypeEnum;
-import com.ly.model.enums.ChatMessageStatusEnum;
 import com.ly.model.enums.ChatRecallStatusEnum;
 import com.ly.model.vo.base.PageVo;
 import com.ly.model.vo.chat.ChatMessageVo;
@@ -141,9 +139,5 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
 
     }
 
-    @Override
-    public List<Long> getRoomUserIds(Long roomId) {
-        return chatRoomMapper.getRoomMemberIds(roomId);
-    }
 
 }

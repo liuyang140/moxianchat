@@ -1,6 +1,10 @@
 package com.ly.model.dto.chat;
 
+import com.ly.model.entity.chat.ChatMessage;
+import com.ly.model.enums.ChatMessageStatusEnum;
+import com.ly.model.enums.ChatMessageTypeEnum;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 @Data
 public class ChatMessageDTO<T> {
@@ -15,4 +19,13 @@ public class ChatMessageDTO<T> {
     private Long messageId;      // 消息ID，用于标识消息
     private Integer messageStatus;      // 0-未读，1-已读，2-已发送，3-发送失败
     private T data;
+
+    public static ChatMessageDTO buildDTO(ChatMessage message,Integer type){
+        ChatMessageDTO chatMessageDTO = new ChatMessageDTO();
+        BeanUtils.copyProperties(message,chatMessageDTO);
+        chatMessageDTO.setType(type);
+        chatMessageDTO.setMessageId(message.getId());
+        chatMessageDTO.setMessageStatus(ChatMessageStatusEnum.UNREAD.getValue());
+        return chatMessageDTO;
+    }
 }

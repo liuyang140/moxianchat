@@ -2,10 +2,9 @@ package com.ly.chat.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ly.model.entity.chat.ChatMessageRead;
-import com.ly.model.vo.chat.UserUnreadMessagesVO;
+import com.ly.model.vo.chat.UserRoomUnreadMessagesVO;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,20 +21,16 @@ public interface ChatMessageReadService extends IService<ChatMessageRead> {
      */
     boolean updateReadStatus(Long roomId, Long userId, LocalDateTime lastReadTime);
 
-
-    /**
-     * 获取用户所有房间的未读消息数和最新消息
-     */
-    UserUnreadMessagesVO getUnreadMessagesByUser(Long userId);
-
     /**
      * 查询指定用户在指定房间的未读数量
      */
-    int countUnreadMessages(Long roomId, Long userId);
+    Long countUnreadMessages(Long roomId, Long userId);
 
     /**
      * 更新用户在房间中的最后已读时间
      */
     void markAsRead(Long roomId, Long userId);
+
+    Long getTotalUnreadCount(Long userId);
 }
 

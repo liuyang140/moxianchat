@@ -1,5 +1,6 @@
 package com.ly.model.vo.customer;
 
+import com.ly.model.entity.customer.CustomerInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,7 +8,7 @@ import lombok.experimental.Accessors;
 @Data
 @Schema(description = "匹配用户vo")
 @Accessors(chain = true)
-public class MatchUserVo {
+public class CustomerUserVo {
 
     @Schema(description = "匹配用户Id")
     private Long customerId;
@@ -32,5 +33,14 @@ public class MatchUserVo {
 
     @Schema(description = "房间id")
     private Long roomId;
+
+    public static CustomerUserVo buildCommonUserVo(CustomerInfo customerInfo){
+        return new CustomerUserVo()
+                .setCustomerId(customerInfo.getId())
+                .setNickname(customerInfo.getNickname())
+                .setGender(customerInfo.getGender())
+                .setAvatarUrl(customerInfo.getAvatarUrl())
+                .setPhone(customerInfo.getPhone());
+    }
 
 }

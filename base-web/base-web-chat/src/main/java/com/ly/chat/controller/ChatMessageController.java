@@ -46,11 +46,7 @@ public class ChatMessageController {
         return Result.ok(chatMessageService.recallMessages(dto));
     }
 
-    @Operation(summary = "获取房间内所有用户id")
-    @GetMapping("/getRoomUserIds")
-    public Result<List<Long>> getRoomUserIds(@RequestParam(value ="roomId") Long roomId){
-        return Result.ok(chatMessageService.getRoomUserIds(roomId));
-    }
+
 
 
 

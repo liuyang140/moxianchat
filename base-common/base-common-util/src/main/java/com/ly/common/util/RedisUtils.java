@@ -1,7 +1,7 @@
 package com.ly.common.util;
 
 import com.ly.common.constant.RedisConstant;
-import com.ly.model.vo.customer.MatchUserVo;
+import com.ly.model.vo.customer.CustomerUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
@@ -105,7 +105,7 @@ public class RedisUtils {
     }
 
 
-    public List<MatchUserVo> searchNearby(Long userId, double radiusKm) {
+    public List<CustomerUserVo> searchNearby(Long userId, double radiusKm) {
         List<Point> points = redisTemplate.opsForGeo().position(RedisConstant.GEO_KEY, String.valueOf(userId));
         if (points == null || points.isEmpty() || points.get(0) == null) return Collections.emptyList();
 
@@ -121,10 +121,10 @@ public class RedisUtils {
                 .map(res -> {
                     String id = res.getContent().getName();
                     double dist = res.getDistance().getValue();
-                    MatchUserVo matchUserVo = new MatchUserVo();
-                    matchUserVo.setCustomerId(Long.valueOf(id));
-                    matchUserVo.setDistanceKm(dist);
-                    return matchUserVo;
+                    CustomerUserVo customerUserVo = new CustomerUserVo();
+                    customerUserVo.setCustomerId(Long.valueOf(id));
+                    customerUserVo.setDistanceKm(dist);
+                    return customerUserVo;
                 })
                 .filter(u -> !u.getCustomerId().equals(userId))
                 .collect(Collectors.toList());
