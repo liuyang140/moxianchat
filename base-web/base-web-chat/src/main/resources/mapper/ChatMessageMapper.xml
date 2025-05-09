@@ -2,18 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ly.chat.mapper.ChatMessageMapper">
     <sql id="Base_Column_List">
-        id,
-        room_id,
-        sender_id,
-        content,
-        message_type,
-        recalled,
-        timestamp,
-        chat_type,
-        receiver_id,
-        create_time,
-        update_time,
-        is_deleted
+        m.id,
+        m.room_id,   <!-- 显式指定表别名 -->
+        m.sender_id,
+        m.content,
+        m.message_type,
+        m.recalled,
+        m.timestamp,
+        m.chat_type,
+        m.receiver_id,
+        m.create_time,
+        m.update_time,
+        m.is_deleted
     </sql>
 
     <select id="getHistoryMessages" resultType="com.ly.model.vo.chat.ChatMessageVo">
@@ -43,7 +43,7 @@
     <select id="getLatestMessage" resultType="com.ly.model.entity.chat.ChatMessage">
         SELECT
             <include refid="Base_Column_List" />
-        FROM chat_message
+        FROM chat_message m
         WHERE room_id = #{roomId}
           AND is_deleted = 0
         ORDER BY create_time DESC
@@ -51,13 +51,25 @@
     </select>
     <select id="getLatestMessagesByRoomIds" resultType="com.ly.model.entity.chat.ChatMessage">
         SELECT
-            <include refid="Base_Column_List" />
-        FROM chat_message m
-                 JOIN (
-            SELECT room_id, MAX(create_time) AS max_time
-            FROM chat_message
-            WHERE room_id IN (${roomIds})
-            GROUP BY room_id
-        ) latest ON m.room_id = latest.room_id AND m.create_time = latest.max_time
+            <include refid="Base_Column_List"/>
+        FROM
+            chat_message m
+        JOIN (
+            SELECT
+                room_id, MAX(create_time) AS max_time
+            FROM
+                chat_message
+            WHERE
+                room_id IN
+                    <foreach collection="roomIds" item="id" separator="," open="(" close=")">
+                        #{id}
+                    </foreach>
+            GROUP BY
+                room_id
+        ) latest
+        ON
+            m.room_id = latest.room_id
+            AND m.create_time = latest.max_time
     </select>
+
 </mapper>
