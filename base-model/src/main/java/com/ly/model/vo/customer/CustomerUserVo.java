@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CustomerUserVo {
 
-    @Schema(description = "匹配用户Id")
+    @Schema(description = "用户Id")
     private Long customerId;
 
     @Schema(description = "用户昵称")

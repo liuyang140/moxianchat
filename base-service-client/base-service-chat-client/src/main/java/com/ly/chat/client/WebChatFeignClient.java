@@ -20,19 +20,20 @@ public interface WebChatFeignClient {
     @PostMapping("/room/createRoom")
     Result<CustomerUserVo> createRoom(@RequestBody RoomCreateDTO roomCreateDTO);
 
+    @GetMapping("/room/getRoomUserIds")
+    Result<List<Long>> getRoomUserIds(@RequestParam(value ="roomId") Long roomId);
+
     @PostMapping("/chatMessage/saveMessages")
     Result saveMessages(@RequestBody UpdateMessageDTO dto);
 
     @PostMapping("/chatMessage/recallMessages")
     Result<List<ChatMessageDTO>> recallMessages(@RequestBody UpdateMessageDTO dto);
 
-    @GetMapping("/room/getRoomUserIds")
-    Result<List<Long>> getRoomUserIds(@RequestParam(value ="roomId") Long roomId);
-
     @GetMapping("/chatMessageRead/unreadCountOne")
     Result<Long> unreadCountOne(@RequestParam(value = "roomId") Long roomId,
                                        @RequestParam(value = "userId") Long userId);
 
     @GetMapping("/chatMessageRead/totalUnread")
-    public Result<Long> getTotalUnreadCount(@RequestParam Long userId);
-    }
+    Result<Long> getTotalUnreadCount(@RequestParam Long userId);
+
+}

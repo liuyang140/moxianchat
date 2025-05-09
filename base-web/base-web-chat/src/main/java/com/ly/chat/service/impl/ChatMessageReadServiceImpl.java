@@ -7,14 +7,7 @@ import com.ly.chat.mapper.ChatMessageMapper;
 import com.ly.chat.mapper.ChatMessageReadMapper;
 import com.ly.chat.mapper.ChatRoomMapper;
 import com.ly.chat.service.ChatMessageReadService;
-import com.ly.model.dto.chat.ChatMessageDTO;
-import com.ly.model.dto.chat.UnreadCountDTO;
-import com.ly.model.entity.chat.ChatMessage;
 import com.ly.model.entity.chat.ChatMessageRead;
-import com.ly.model.entity.chat.ChatRoom;
-import com.ly.model.enums.ChatEventTypeEnum;
-import com.ly.model.vo.chat.RoomVO;
-import com.ly.model.vo.chat.UserRoomUnreadMessagesVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

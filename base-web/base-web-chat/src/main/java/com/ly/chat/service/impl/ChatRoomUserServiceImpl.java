@@ -9,4 +9,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChatRoomUserServiceImpl extends ServiceImpl<ChatRoomUserMapper, ChatRoomUser> implements ChatRoomUserService {
+
 }

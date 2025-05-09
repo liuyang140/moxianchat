@@ -4,7 +4,6 @@ import com.ly.common.execption.LyException;
 import com.ly.common.result.Result;
 import com.ly.common.result.ResultCodeEnum;
 import com.ly.customer.client.CustomerInfoFeignClient;
-import com.ly.model.dto.chat.RoomCreateDTO;
 import com.ly.model.vo.customer.CustomerUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
