@@ -15,6 +15,7 @@ import com.ly.model.dto.chat.ChatMessageDTO;
 import com.ly.model.dto.chat.UpdateMessageDTO;
 import com.ly.model.enums.ChatEventTypeEnum;
 import com.ly.model.enums.ChatTypeEnum;
+import com.ly.model.vo.chat.ChatMessageUnReadVo;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.AttributeKey;
@@ -189,7 +190,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 //        chatMessageService.recallMessage(json);
 
         ChatMessageDTO chatMessageDTO = json.toJavaObject(ChatMessageDTO.class);
-        List<ChatMessageDTO> reCallMessages = clientUtils.reCallMessages(new UpdateMessageDTO().setChatMessageDTOList(CollUtil.newArrayList(chatMessageDTO)), ctx);
+        List<ChatMessageDTO> reCallMessages = clientUtils.reCallMessages(new UpdateMessageDTO().setChatMessageDTOList(CollUtil.newArrayList(chatMessageDTO)));
         reCallMessages.forEach(message -> {
             this.forwardMessage(message,ctx);
         });
@@ -274,10 +275,20 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         }
         ChatMessageDTO dto = json.toJavaObject(ChatMessageDTO.class);
         if(clientUtils.saveMessages(new UpdateMessageDTO().setChatMessageDTOList(CollUtil.toList(dto)))){
+            //消息保存成功
             this.forwardMessage(dto, ctx);
+            //推送未读通知
+            this.pushUnreadNotification(dto);
         }
         // 持久化 + 转发
 //        chatMessageService.saveAndForward(json);
+    }
+
+    //实时推送所有房间未读通知统计数量
+    private void pushUnreadNotification(ChatMessageDTO savedDto) {
+        Long roomId = savedDto.getRoomId();
+        Long senderId = savedDto.getSenderId();
+
     }
 
     private void forwardMessage(ChatMessageDTO dto , ChannelHandlerContext ctx) {
@@ -291,7 +302,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
         // 群聊广播
         if (Objects.equals(dto.getChatType(), ChatTypeEnum.GROUP.getValue())) {
-            List<Long> memberList = clientUtils.getRoomUserIds(dto.getRoomId(), ctx);
+            List<Long> memberList = clientUtils.getRoomUserIds(dto.getRoomId());
             Set<Long> memberSet = new HashSet<>(memberList);
             for (Long memberId : memberSet) {
                 if (memberId.equals(dto.getSenderId())) continue; // 不发给自己

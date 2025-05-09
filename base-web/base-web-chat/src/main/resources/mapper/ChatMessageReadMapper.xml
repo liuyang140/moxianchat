@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.chat.mapper.ChatMessageReadMapper">
+
+
+    <!-- 获取某个聊天室中所有用户的未读消息数 -->
+    <select id="getUnreadMessageCountByRoomId" resultType="map">
+        SELECT cmr.user_id, COUNT(*) AS unread_count
+        FROM chat_message cm
+                 LEFT JOIN chat_message_read cmr
+                           ON cmr.room_id = #{roomId}
+        WHERE cm.room_id = #{roomId}
+          AND cm.create_time > cmr.last_read_time
+          AND cmr.is_deleted = 0
+        GROUP BY cmr.user_id
+    </select>
+
+    <!-- 获取用户在某个聊天室的最新未读消息ID -->
+    <select id="getLatestUnreadMessageId" resultType="long">
+        SELECT MAX(cm.id)
+        FROM chat_message cm
+                 LEFT JOIN chat_message_read cmr
+                           ON cmr.room_id = #{roomId} AND cmr.user_id = #{userId}
+        WHERE cm.room_id = #{roomId}
+          AND cm.create_time > cmr.last_read_time
+          AND cm.is_deleted = 0
+    </select>
+</mapper>

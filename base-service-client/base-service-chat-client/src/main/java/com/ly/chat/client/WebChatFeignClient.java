@@ -29,4 +29,8 @@ public interface WebChatFeignClient {
     @GetMapping("/chatMessage/getRoomUserIds")
     Result<List<Long>> getRoomUserIds(@RequestParam(value ="roomId") Long roomId);
 
+    @GetMapping("/chatMessageRead/unreadCountOne")
+    Result<Long> unreadCountOne(@RequestParam(value = "roomId") Long roomId,
+                                       @RequestParam(value = "userId") Long userId);
+
 }

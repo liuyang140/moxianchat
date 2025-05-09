@@ -35,12 +35,11 @@ CREATE TABLE chat_message (
 ) COMMENT='聊天消息表';
 
 CREATE TABLE chat_message_read (
-                                   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                                   message_id BIGINT NOT NULL COMMENT '消息ID',
-                                   user_id BIGINT NOT NULL COMMENT '接收者用户ID',
-                                   room_id BIGINT NOT NULL COMMENT '聊天室ID',
-                                   read_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '阅读时间',
-                                   create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-                                   update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                   UNIQUE KEY uk_user_message (message_id, user_id)
-) COMMENT='消息已读记录表（群聊/私聊通用）';
+                                   id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',  -- 消息已读状态记录的唯一标识符
+                                   room_id BIGINT NOT NULL COMMENT '聊天室ID',  -- 所属聊天室的ID
+                                   user_id BIGINT NOT NULL COMMENT '用户ID',  -- 用户的唯一标识符
+                                   last_read_time DATETIME NOT NULL COMMENT '上次读取时间', -- 用户在聊天室中最后读取的时间
+                                   create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',  -- 记录创建时间
+                                   update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',  -- 记录更新时间，自动更新
+                                   is_deleted TINYINT DEFAULT 0 COMMENT '逻辑删除字段：0-未删除，1-已删除'  -- 标识该记录是否已被逻辑删除
+) COMMENT='已读状态表';

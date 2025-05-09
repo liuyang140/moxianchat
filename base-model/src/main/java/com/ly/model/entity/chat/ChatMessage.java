@@ -17,6 +17,7 @@ public class ChatMessage extends BaseEntity {
     private Long senderId;
 
     /** 消息内容 */
+    @TableField("content")
     private String content;
 
     /** 消息类型（0-text, 1-image, 2-file 等） */

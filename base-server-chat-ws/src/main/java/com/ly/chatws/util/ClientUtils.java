@@ -38,7 +38,7 @@ public class ClientUtils {
     /*
      * 批量撤回消息
      * */
-    public List<ChatMessageDTO> reCallMessages(UpdateMessageDTO uDto,ChannelHandlerContext ctx) {
+    public List<ChatMessageDTO> reCallMessages(UpdateMessageDTO uDto) {
         Result<List<ChatMessageDTO>> result = executeWithException(
                 () -> chatFeign.recallMessages(uDto),
                 "撤回消息"
@@ -53,7 +53,7 @@ public class ClientUtils {
     /*
      * 根据房间id获取房间内所有用户id
      * */
-    public List<Long> getRoomUserIds(Long roomId,ChannelHandlerContext ctx){
+    public List<Long> getRoomUserIds(Long roomId){
         Result<List<Long>> result = executeWithException(
                 () -> chatFeign.getRoomUserIds(roomId),
                 "获取房间用户"
@@ -63,6 +63,21 @@ public class ClientUtils {
         }
         log.error("获取房间用户失败: {}", result != null ? result.getMessage() : "未知错误");
         return CollUtil.newArrayList();
+    }
+
+    /*
+    * 获取房间内某用户未读消息数量
+    * */
+    public Long unreadCountOne(Long roomId,Long userId){
+        Result<Long> result = executeWithException(
+                () -> chatFeign.unreadCountOne(roomId,userId),
+                "获取房间用户未读消息数量"
+        );
+        if (result != null && result.isOk()) {
+            return result.getData();
+        }
+        log.error("获取房间用户未读消息数量失败: {}", result != null ? result.getMessage() : "未知错误");
+        return 0L;
     }
 
     /*
