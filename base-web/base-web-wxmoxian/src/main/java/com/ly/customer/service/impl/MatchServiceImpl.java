@@ -73,7 +73,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public ReceiverInfoVo matchUser(Long customerId, Double initRadius, Double maxRadius, Double stepKm) {
 
-        if(Objects.isNull(customerId)) customerId = userCacheUtils.getCustomerId();
+        if(Objects.isNull(customerId)) customerId = userCacheUtils.getLoginUserId();
         double radius = initRadius;
 
         CustomerUserVo customerUserVo = null;

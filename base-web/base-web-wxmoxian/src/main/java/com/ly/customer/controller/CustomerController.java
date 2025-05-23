@@ -58,6 +58,15 @@ public class CustomerController {
 		return Result.ok(list);
 	}
 
+	@Operation(summary = "根据id获取单个用户信息-做缓存")
+	@GetMapping("/getCustomerInfoById")
+	public Result<CustomerUserVo> getCustomerInfoById(
+			@Parameter(description = "用户id", required = true) @RequestParam(value = "customerId") Long customerId) {
+		CustomerUserVo customerUserVo = customerService.getCustomerInfoById(customerId);
+		return Result.ok(customerUserVo);
+	}
+
+
 
 }
 

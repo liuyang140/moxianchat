@@ -1,5 +1,6 @@
 package com.ly.model.vo.customer;
 
+import com.ly.model.dto.user.CacheUserDTO;
 import com.ly.model.entity.customer.CustomerInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -42,5 +43,15 @@ public class CustomerUserVo {
                 .setAvatarUrl(customerInfo.getAvatarUrl())
                 .setPhone(customerInfo.getPhone());
     }
+
+    public static CustomerUserVo buildUserDtoToVo(CacheUserDTO userDTO){
+        return new CustomerUserVo()
+                .setCustomerId(userDTO.getId())
+                .setNickname(userDTO.getNickname())
+                .setGender(userDTO.getGender())
+                .setAvatarUrl(userDTO.getAvatarUrl())
+                .setPhone(userDTO.getPhone());
+    }
+
 
 }

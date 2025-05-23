@@ -18,6 +18,9 @@ public class RedisConstant {
     public static final String USER_ROOM_PREFIX = "chat:user:rooms:"; //用户加入的房间集合
     public static final String ROOM_KEY_PREFIX = "chat:room:"; // 房间成员集合
 
+    //用户缓存
+    public static final String USER_CACHE_KEY_PREFIX = "user:cache:";
+
 
 
 //    //订单与任务关联

@@ -18,4 +18,6 @@ public interface CustomerService extends IService<CustomerInfo> {
 	void updateCustomerInfo(UpdateCustomerDTO updateCustomerDTO);
 
     List<CustomerUserVo> getBatchCustomerInfo(List<Long> customerIds);
+
+	CustomerUserVo getCustomerInfoById(Long customerId);
 }

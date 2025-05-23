@@ -61,7 +61,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 	public CustomerLoginVo getCustomerLoginInfo() {
 /*		Long customerId = userCacheUtils.getCustomerId();
 		CustomerInfo customerInfo = this.getById(customerId);*/
-		CacheUserDTO cacheUser = userCacheUtils.getCacheUser();
+		CacheUserDTO cacheUser = userCacheUtils.getCacheLoginUser();
 		CustomerLoginVo customerInfoVo = new CustomerLoginVo();
 		BeanUtils.copyProperties(cacheUser, customerInfoVo);
 		customerInfoVo.setCustomerId(cacheUser.getId());
@@ -80,7 +80,12 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 		CustomerInfo customerInfo = BeanUtil.copyProperties(updateCustomerDTO, CustomerInfo.class);
 		this.updateById(customerInfo);
 		//更新缓存信息
-		userCacheUtils.cacheUser(id, BeanUtil.copyProperties(customerInfo, CacheUserDTO.class));
+		userCacheUtils.cacheLoginUser(id, BeanUtil.copyProperties(customerInfo, CacheUserDTO.class));
+		//获取自定义缓存信息，若存在则更新
+		CacheUserDTO cacheUserInfo = userCacheUtils.getCacheUserInfo(id);
+		if(Objects.nonNull(cacheUserInfo)){
+			userCacheUtils.cacheUserInfo(id, BeanUtil.copyProperties(customerInfo, CacheUserDTO.class));
+		}
 	}
 
 	@Override
@@ -91,6 +96,27 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 			result.add(CustomerUserVo.buildCommonUserVo(customerInfo));
 		});
 		return result;
+	}
+
+	@Override
+	public CustomerUserVo getCustomerInfoById(Long customerId) {
+		//判断登陆信息是否存在，取登录信息
+		CacheUserDTO cacheUser = userCacheUtils.getCacheLoginUser(customerId);
+		if(Objects.nonNull(cacheUser)){
+			return CustomerUserVo.buildUserDtoToVo(cacheUser);
+		}
+		//判断缓存信息是否存在，取缓存信息
+		CacheUserDTO cacheUserInfo = userCacheUtils.getCacheUserInfo(customerId);
+		if(Objects.nonNull(cacheUserInfo)){
+			return CustomerUserVo.buildUserDtoToVo(cacheUserInfo);
+		}
+
+		CustomerInfo customerInfo = this.getById(customerId);
+		if(Objects.isNull(customerInfo)){
+			throw new LyException(ResultCodeEnum.DATA_ERROR);
+		}
+		userCacheUtils.cacheUserInfo(customerId, cacheUserInfo);
+		return CustomerUserVo.buildCommonUserVo(customerInfo);
 	}
 
 	private long getLoginCustomerId(String code) {
@@ -116,7 +142,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerInfoMapper, Custome
 
 		CacheUserDTO cacheUserDTO = BeanUtil.copyProperties(customerInfo, CacheUserDTO.class);
 		//缓存用户信息
-		userCacheUtils.cacheUser(customerInfo.getId(), cacheUserDTO);
+		userCacheUtils.cacheLoginUser(customerInfo.getId(), cacheUserDTO);
 
 		//登录日志
 		CustomerLoginLog customerLoginLog = new CustomerLoginLog();
