@@ -1,5 +1,6 @@
 package com.ly.customer.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.ly.common.execption.LyException;
 import com.ly.common.result.ResultCodeEnum;
 import com.ly.customer.util.ClientUtils;
@@ -10,6 +11,7 @@ import com.ly.customer.mapper.CustomerLocationMapper;
 import com.ly.customer.service.*;
 import com.ly.model.entity.customer.CustomerInfo;
 import com.ly.model.entity.customer.CustomerLocation;
+import com.ly.model.vo.chat.ReceiverInfoVo;
 import com.ly.model.vo.customer.CustomerUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +71,7 @@ public class MatchServiceImpl implements MatchService {
      * 发起匹配请求
      */
     @Override
-    public CustomerUserVo matchUser(Long customerId, Double initRadius, Double maxRadius, Double stepKm) {
+    public ReceiverInfoVo matchUser(Long customerId, Double initRadius, Double maxRadius, Double stepKm) {
 
         if(Objects.isNull(customerId)) customerId = userCacheUtils.getCustomerId();
         double radius = initRadius;
@@ -118,7 +120,9 @@ public class MatchServiceImpl implements MatchService {
                     .setPhone(customerInfo.getPhone());
         }
 
-        return customerUserVo;
+        ReceiverInfoVo receiverInfoVo = BeanUtil.copyProperties(customerUserVo, ReceiverInfoVo.class);
+        receiverInfoVo.setReceiverId(customerUserVo.getCustomerId());
+        return receiverInfoVo;
     }
 
 

@@ -2,7 +2,6 @@ package com.ly.chat.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ly.model.entity.chat.ChatMessageRead;
-import com.ly.model.vo.chat.UserRoomUnreadMessagesVO;
 
 import java.time.LocalDateTime;
 import java.util.Map;

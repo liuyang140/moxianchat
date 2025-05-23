@@ -3,7 +3,7 @@ package com.ly.chat.controller;
 import com.ly.chat.service.ChatRoomService;
 import com.ly.common.result.Result;
 import com.ly.model.dto.chat.RoomCreateDTO;
-import com.ly.model.vo.chat.UserRoomUnreadMessagesVO;
+import com.ly.model.vo.chat.UserRoomUnreadMessagesVo;
 import com.ly.model.vo.customer.CustomerUserVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +34,7 @@ public class ChatRoomController {
 
     @Operation(summary = "获取用户所有房间的未读消息数和最新消息")
     @GetMapping("/unreadByUserId")
-    public Result<UserRoomUnreadMessagesVO> getUnreadMessagesByUserId() {
+    public Result<UserRoomUnreadMessagesVo> getUnreadMessagesByUserId() {
         return Result.ok(chatRoomService.getUnreadMessagesByUser());
     }
 }

@@ -58,7 +58,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     /*
     消息格式
     {
-      "type": 0,        // 类型：chat-0、bind-1、recall-2、ping-3、login -4
+      "eventType": 0,        // 类型：chat-0、bind-1、recall-2、ping-3、login -4
       "chatType": 0,         // 聊天类型：0-私聊，1-群聊
       "roomId": 10001,       // 房间ID
       "senderId": 123,       // 发送者ID

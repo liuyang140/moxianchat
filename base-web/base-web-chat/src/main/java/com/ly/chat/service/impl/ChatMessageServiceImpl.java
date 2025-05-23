@@ -98,7 +98,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
 
             // 构造撤回通知消息
             ChatMessageDTO recallNotice = new ChatMessageDTO();
-            recallNotice.setType(ChatEventTypeEnum.RECALL.getValue());
+            recallNotice.setEventType(ChatEventTypeEnum.RECALL.getValue());
             recallNotice.setChatType(chatMessageDTO.getChatType());
             recallNotice.setMessageId(chatMessageDTO.getMessageId());
             recallNotice.setRoomId(chatMessageDTO.getRoomId());

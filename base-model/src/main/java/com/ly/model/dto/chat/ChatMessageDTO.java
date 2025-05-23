@@ -8,7 +8,7 @@ import org.springframework.beans.BeanUtils;
 
 @Data
 public class ChatMessageDTO<T> {
-    private Integer type;         // 事件类型：chat、bind、recall、login、ping等
+    private Integer eventType;         // 事件类型：chat、bind、recall、login、ping等
     private Integer chatType;    // 聊天类型：0-私聊，1-群聊
     private Long roomId;         // 房间ID（私聊时用于区分会话，群聊表示群组）
     private Long senderId;       // 消息发送者ID
@@ -23,7 +23,7 @@ public class ChatMessageDTO<T> {
     public static ChatMessageDTO buildDTO(ChatMessage message,Integer type){
         ChatMessageDTO chatMessageDTO = new ChatMessageDTO();
         BeanUtils.copyProperties(message,chatMessageDTO);
-        chatMessageDTO.setType(type);
+        chatMessageDTO.setEventType(type);
         chatMessageDTO.setMessageId(message.getId());
         chatMessageDTO.setMessageStatus(ChatMessageStatusEnum.UNREAD.getValue());
         return chatMessageDTO;

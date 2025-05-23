@@ -16,8 +16,8 @@ import com.ly.model.entity.chat.ChatRoom;
 import com.ly.model.entity.chat.ChatRoomUser;
 import com.ly.model.enums.ChatEventTypeEnum;
 import com.ly.model.enums.ChatTypeEnum;
-import com.ly.model.vo.chat.RoomVO;
-import com.ly.model.vo.chat.UserRoomUnreadMessagesVO;
+import com.ly.model.vo.chat.RoomVo;
+import com.ly.model.vo.chat.UserRoomUnreadMessagesVo;
 import com.ly.model.vo.customer.CustomerUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -105,7 +104,7 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
     }
 
     @Override
-    public UserRoomUnreadMessagesVO getUnreadMessagesByUser() {
+    public UserRoomUnreadMessagesVo getUnreadMessagesByUser() {
         Long userId = AuthContextHolder.getUserId();
         ChatRoomMapper chatRoomMapper = this.getBaseMapper();
         // 获取用户加入的房间ID
@@ -138,8 +137,8 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
         Map<Long, ChatRoom> roomMap = roomList.stream()
                 .collect(Collectors.toMap(ChatRoom::getId, Function.identity()));
 
-        List<RoomVO> roomVOList = roomIds.stream().map(roomId -> {
-            RoomVO vo = new RoomVO();
+        List<RoomVo> roomVoList = roomIds.stream().map(roomId -> {
+            RoomVo vo = new RoomVo();
             vo.setRoomId(roomId);
             ChatRoom room = roomMap.get(roomId);
             if (room != null) {
@@ -149,7 +148,7 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
                     CustomerUserVo customerUserVo = roomId2UserVoMap.getOrDefault(roomId, new CustomerUserVo().setNickname("郭亚东"));
                     vo.setRoomName(customerUserVo.getNickname());
                 }
-                vo.setType(room.getType());
+                vo.setRoomType(room.getType());
             }
             vo.setUnreadCount(unreadMap.getOrDefault(roomId, 0));
             ChatMessage msg = messageMap.get(roomId);
@@ -159,9 +158,9 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
             return vo;
         }).collect(Collectors.toList());
 
-        UserRoomUnreadMessagesVO result = new UserRoomUnreadMessagesVO();
-        result.setUserId(userId);
-        result.setRooms(roomVOList);
+        UserRoomUnreadMessagesVo result = new UserRoomUnreadMessagesVo();
+        result.setCustomerId(userId);
+        result.setRooms(roomVoList);
         return result;
     }
 
