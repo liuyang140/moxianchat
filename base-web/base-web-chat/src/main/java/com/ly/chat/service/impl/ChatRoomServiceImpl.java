@@ -144,9 +144,10 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
             if (room != null) {
                 if (ChatTypeEnum.GROUP.getValue().intValue() == room.getType().intValue()) {
                     vo.setRoomName(room.getName());
-                }else{
+                }else{//私聊放房间接收人
                     CustomerUserVo customerUserVo = roomId2UserVoMap.getOrDefault(roomId, new CustomerUserVo().setNickname("郭亚东"));
                     vo.setRoomName(customerUserVo.getNickname());
+                    vo.setRoomReceiverId(customerUserVo.getCustomerId());
                 }
                 vo.setRoomType(room.getType());
             }

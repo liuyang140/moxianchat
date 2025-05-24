@@ -75,7 +75,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
         log.info("收到消息: {}", msg.text());
         JSONObject json = JSON.parseObject(msg.text());
-        Integer type = json.getInteger("type");
+        Integer type = json.getInteger("eventType");
         ChatEventTypeEnum eventType = ChatEventTypeEnum.fromValue(type);
 
         if (eventType == null) {
@@ -124,7 +124,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     /*
     * {
-         "type": 6,
+         "eventType": 6,
          "roomId": 10001,
          "senderId": 2001
       }
@@ -175,7 +175,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     /*
     * {
-          "type": 4,
+          "eventType": 4,
           "roomId": 123,
           "userId": 1001
         }
@@ -213,7 +213,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     /*
     * {
-          "type": 4,
+          "eventType": 4,
           "customerId": 1234,
           "timestamp": 1714976542000
        }
@@ -230,7 +230,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     /*
       {
-          "type": 2,
+          "eventType": 2,
           "messageId": 12345,
           "roomId": 1001,
           "senderId": 2001
@@ -248,7 +248,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     /*
       {
-          "type": 1,
+          "eventType": 1,
           "senderId": 2001
       }
     */
@@ -315,7 +315,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     /*
     {
-      "type": 0,
+      "eventType": 0,
       "chatType": 0,
       "roomId": 10001,
       "senderId": 2,
