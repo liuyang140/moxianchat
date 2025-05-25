@@ -214,15 +214,15 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
     /*
     * {
           "eventType": 4,
-          "customerId": 1234,
+          "senderId": 1234,
           "timestamp": 1714976542000
        }
        10-20秒发送一次心跳包
     * */
     private void handlePing(ChannelHandlerContext ctx, JSONObject json) {
-        Long customerId = json.getLong("customerId");
-        ChannelManager.refreshLastActiveTime(customerId); // 更新活跃时间
-        sessionManager.refreshAllTTL(customerId); //刷新redis所有关联ttl
+        Long senderId = json.getLong("senderId");
+        ChannelManager.refreshLastActiveTime(senderId); // 更新活跃时间
+        sessionManager.refreshAllTTL(senderId); //刷新redis所有关联ttl
         //TODO 持久层更新用户活跃时间，feign远程调用 ... 暂不实现
 
         sendSuccess(ctx,ChatEventTypeEnum.PING,null, "pong");
