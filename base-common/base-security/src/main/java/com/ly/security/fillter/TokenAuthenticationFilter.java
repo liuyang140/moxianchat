@@ -1,3 +1,4 @@
+/*
 package com.ly.security.fillter;
 
 
@@ -24,11 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+*/
 /**
  * <p>
  * 身份验证过滤器
  * </p>
- */
+ *//*
+
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private RedisTemplate redisTemplate;
@@ -86,3 +89,4 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 }
+*/

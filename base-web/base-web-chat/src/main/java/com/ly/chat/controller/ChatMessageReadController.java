@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/chatMessageRead")
-@Tag(name = "未读消息状态API接口管理")
+@Tag(name = "未读消息状态API接口管理（chat-api）")
 public class ChatMessageReadController {
 
     @Autowired

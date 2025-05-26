@@ -1,3 +1,4 @@
+/*
 package com.ly.common.service;
 
 
@@ -8,3 +9,4 @@ public class RabbitService {
 
 
 }
+*/

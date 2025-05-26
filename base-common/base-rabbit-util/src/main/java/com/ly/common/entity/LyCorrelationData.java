@@ -1,3 +1,4 @@
+/*
 package com.ly.common.entity;
 
 import lombok.Data;
@@ -19,3 +20,4 @@ public class LyCorrelationData extends CorrelationData {
     //延迟时长
     private int delayTime = 10;
 }
+*/

@@ -47,6 +47,12 @@ spring:
             - Path=/chat-ws/**
           filters:
             - StripPrefix=1
+        - id: server-minio
+          uri: lb://server-minio
+          predicates:
+            - Path=/file-api/**
+          filters:
+            - StripPrefix=1
   data:
     redis:
       host: 117.72.125.187

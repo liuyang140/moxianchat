@@ -1,6 +1,6 @@
 package com.ly.common.util;
 
-public class LocationUtil {
+public class LocationUtils {
 
     // 地球赤道半径
     private static double EARTH_RADIUS = 6378.137;

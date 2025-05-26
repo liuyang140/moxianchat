@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: server-minio
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive

@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@Tag(name = "匹配API接口管理")
+@Tag(name = "匹配API接口管理（customer-api）")
 @RestController
 @RequestMapping("/match")
 public class MatchController {

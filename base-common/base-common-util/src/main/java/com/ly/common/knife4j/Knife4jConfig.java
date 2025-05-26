@@ -1,4 +1,4 @@
-package com.ly.common.config.knife4j;
+package com.ly.common.knife4j;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;

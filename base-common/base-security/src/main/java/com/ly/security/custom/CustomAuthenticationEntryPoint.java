@@ -1,3 +1,4 @@
+/*
 package com.ly.security.custom;
 
 import com.ly.common.result.Result;
@@ -20,3 +21,4 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         ResponseUtil.out(response, Result.build(null, ResultCodeEnum.ACCOUNT_ERROR));
     }
 }
+*/

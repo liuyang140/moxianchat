@@ -1,4 +1,4 @@
-package com.ly.common.config.appIncepter;
+package com.ly.common.appIncepter;
 
 import com.ly.common.util.AuthContextHolder;
 import com.ly.common.util.JwtUtils;

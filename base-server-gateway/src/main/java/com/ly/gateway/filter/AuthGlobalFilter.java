@@ -4,7 +4,7 @@ import com.ly.common.constant.RedisConstant;
 import com.ly.common.constant.SystemConstant;
 import com.ly.common.util.JwtUtils;
 import com.ly.common.util.RedisUtils;
-import com.ly.common.util.ResponseUtil;
+import com.ly.common.util.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         // 获取Token
         String token = request.getHeaders().getFirst(SystemConstant.TOKEN);
         if (StringUtils.isEmpty(token)) {
-            return ResponseUtil.forbidden(exchange);
+            return ResponseUtils.forbidden(exchange);
         }
 
         // 校验Token是否合法
@@ -50,14 +50,14 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         try {
             userId = JwtUtils.getUserIdFromToken(token);
         } catch (Exception e) {
-            return ResponseUtil.unauthorized(exchange);
+            return ResponseUtils.unauthorized(exchange);
         }
 
         // 校验Redis中是否有缓存
         String redisKey = RedisConstant.USER_LOGIN_KEY_PREFIX + userId;
         String json = redisUtils.get(redisKey);
         if (StringUtils.isEmpty(json)) {
-            return ResponseUtil.unauthorized(exchange);
+            return ResponseUtils.unauthorized(exchange);
         }
 
         // 将用户信息传递到下游服务

@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        namespace: 1555926c-7e69-4779-868f-5b57b13cda4e
+        group: DEFAULT_GROUP
+      discovery:
+        namespace: 1555926c-7e69-4779-868f-5b57b13cda4e
+        group: DEFAULT_GROUP
+      server-addr: 117.72.125.187:8848
+      username: nacos
+      password: nacos
+  config:
+    import:
+      - nacos:server-minio-dev.yaml?group=DEFAULT_GROUP&namespace=1555926c-7e69-4779-868f-5b57b13cda4e
+      - nacos:common-account.yaml?group=DEFAULT_GROUP&namespace=1555926c-7e69-4779-868f-5b57b13cda4e

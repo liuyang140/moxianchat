@@ -1,4 +1,4 @@
-package com.ly.common.config.appIncepter;
+package com.ly.common.appIncepter;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;

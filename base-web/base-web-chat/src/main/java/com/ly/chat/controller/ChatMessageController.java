@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@Tag(name = "消息API接口管理")
+@Tag(name = "消息API接口管理（chat-api）")
 @RestController
 @RequestMapping("/chatMessage")
 public class ChatMessageController {

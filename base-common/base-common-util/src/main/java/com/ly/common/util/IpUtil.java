@@ -5,7 +5,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 /**
  * 获取ip地址
@@ -78,5 +80,26 @@ public class IpUtil {
             ip = request.getRemoteAddress().getAddress().getHostAddress();
         }
         return ip;
+    }
+
+    public static String getLocalIp() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface ni = interfaces.nextElement();
+                if (!ni.isUp() || ni.isLoopback() || ni.isVirtual()) continue;
+
+                Enumeration<InetAddress> addresses = ni.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (!addr.isLoopbackAddress() && addr.getHostAddress().indexOf(':') == -1) {
+                        return addr.getHostAddress(); // 返回第一个符合条件的 IPv4 地址
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // 忽略异常，默认返回 localhost
+        }
+        return "localhost";
     }
 }

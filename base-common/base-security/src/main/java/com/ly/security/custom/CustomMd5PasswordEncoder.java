@@ -1,15 +1,18 @@
+/*
 package com.ly.security.custom;
 
 import com.ly.common.util.MD5;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+*/
 /**
  * <p>
  * 密码处理
  * </p>
  *
- */
+ *//*
+
 @Component
 public class CustomMd5PasswordEncoder implements PasswordEncoder {
 
@@ -23,4 +26,4 @@ public class CustomMd5PasswordEncoder implements PasswordEncoder {
 
 
 
-}
+}*/

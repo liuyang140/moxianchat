@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "聊天室API接口管理")
+@Tag(name = "聊天室API接口管理（chat-api）")
 @RestController
 @RequestMapping("/room")
 public class ChatRoomController {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "用户API接口管理")
+@Tag(name = "用户API接口管理（customer-api）")
 @RestController
 @RequestMapping("/customer")
 @SuppressWarnings({"unchecked", "rawtypes"})
