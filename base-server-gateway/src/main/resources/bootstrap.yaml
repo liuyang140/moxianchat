@@ -10,3 +10,10 @@ spring:
 auth:
   interceptor:
     enabled: false
+
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:certs/dongyangyuan.xin.p12
+    key-store-password: 13hunzhidang
+    key-store-type: PKCS12

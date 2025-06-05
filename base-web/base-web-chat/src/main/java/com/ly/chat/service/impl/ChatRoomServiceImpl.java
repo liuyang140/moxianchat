@@ -9,6 +9,7 @@ import com.ly.chat.service.ChatRoomService;
 import com.ly.chat.service.ChatRoomUserService;
 import com.ly.chat.utils.ClientUtils;
 import com.ly.common.util.AuthContextHolder;
+import com.ly.common.util.UserCacheUtils;
 import com.ly.model.dto.chat.ChatMessageDTO;
 import com.ly.model.dto.chat.UnreadCountDTO;
 import com.ly.model.entity.chat.ChatMessage;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,8 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
 
     @Autowired
     private ClientUtils clientUtils;
+    @Autowired
+    private UserCacheUtils userCacheUtils;
 
     /**
      * 创建（或复用）一个私聊房间，返回包含房间ID的匹配用户信息
@@ -105,7 +109,7 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
 
     @Override
     public UserRoomUnreadMessagesVo getUnreadMessagesByUser() {
-        Long userId = AuthContextHolder.getUserId();
+        Long userId = userCacheUtils.getLoginUserId();
         ChatRoomMapper chatRoomMapper = this.getBaseMapper();
         // 获取用户加入的房间ID
         List<Long> roomIds = chatRoomMapper.getRoomIdsByUser(userId);
@@ -121,7 +125,7 @@ public class ChatRoomServiceImpl extends ServiceImpl<ChatRoomMapper, ChatRoom> i
         Map<Long, CustomerUserVo> userVoMap = clientUtils.getBatchUserVos(userIds).stream().collect(Collectors.toMap(CustomerUserVo::getCustomerId, Function.identity()));
         Map<Long, CustomerUserVo> roomId2UserVoMap = chatRoomUserService.lambdaQuery().in(ChatRoomUser::getRoomId, roomIds)
                 .list().stream()
-                .filter(roomUser -> userVoMap.containsKey(roomUser.getUserId()))
+                .filter(roomUser -> userVoMap.containsKey(roomUser.getUserId()) && !Objects.equals(userId, roomUser.getUserId()))
                 .collect(Collectors.toMap(ChatRoomUser::getRoomId, roomUser -> userVoMap.get(roomUser.getUserId()), (v1, v2) -> v1));
 
         // 获取每个房间的基础信息
