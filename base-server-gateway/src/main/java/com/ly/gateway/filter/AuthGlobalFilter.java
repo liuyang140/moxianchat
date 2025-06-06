@@ -13,6 +13,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -41,6 +42,13 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
         // 获取Token
         String token = request.getHeaders().getFirst(SystemConstant.TOKEN);
+
+        // 如果 header 中没有，尝试从 URL 查询参数中获取
+        if (StringUtils.isEmpty(token)) {
+            MultiValueMap<String, String> queryParams = request.getQueryParams();
+            token = queryParams.getFirst("token");
+        }
+
         if (StringUtils.isEmpty(token)) {
             return ResponseUtils.forbidden(exchange);
         }
