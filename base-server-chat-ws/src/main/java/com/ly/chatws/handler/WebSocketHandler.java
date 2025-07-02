@@ -193,7 +193,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
 
     private void handleLeaveRoom(ChannelHandlerContext ctx, JSONObject json) {
         Long roomId = json.getLong("roomId");
-        Long userId = json.getLong("userId");
+        Long userId = json.getLong("senderId");
 
         ChannelManager.leaveRoom(roomId, userId);
 

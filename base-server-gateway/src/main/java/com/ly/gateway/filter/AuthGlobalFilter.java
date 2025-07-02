@@ -43,13 +43,8 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         // 获取Token
         String token = request.getHeaders().getFirst(SystemConstant.TOKEN);
 
-        // 如果 header 中没有，尝试从 URL 查询参数中获取
         if (StringUtils.isEmpty(token)) {
-            MultiValueMap<String, String> queryParams = request.getQueryParams();
-            token = queryParams.getFirst("token");
-        }
-
-        if (StringUtils.isEmpty(token)) {
+            log.info("+++++++++++++++  token为空  +++++++++++++++++++++");
             return ResponseUtils.forbidden(exchange);
         }
 
@@ -68,6 +63,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return ResponseUtils.unauthorized(exchange);
         }
 
+        log.info("+++++++++++++++  token合法  +++++++++++++++++++++");
         // 将用户信息传递到下游服务
         ServerHttpRequest newRequest = request.mutate()
                 .header(SystemConstant.USER_ID, userId.toString())
