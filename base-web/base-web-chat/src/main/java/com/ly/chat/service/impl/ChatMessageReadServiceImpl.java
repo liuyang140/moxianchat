@@ -1,5 +1,6 @@
 package com.ly.chat.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,6 +9,8 @@ import com.ly.chat.mapper.ChatMessageReadMapper;
 import com.ly.chat.mapper.ChatRoomMapper;
 import com.ly.chat.service.ChatMessageReadService;
 import com.ly.model.entity.chat.ChatMessageRead;
+import io.swagger.v3.core.util.Json;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
  * 用户对聊天室已读状态的 Service 实现类
  */
 @Service
+@Slf4j
 public class ChatMessageReadServiceImpl extends ServiceImpl<ChatMessageReadMapper, ChatMessageRead> implements ChatMessageReadService {
 
     @Autowired
@@ -52,15 +56,18 @@ public class ChatMessageReadServiceImpl extends ServiceImpl<ChatMessageReadMappe
                 .eq(ChatMessageRead::getRoomId, roomId)
                 .eq(ChatMessageRead::getUserId,userId)
                 .one();
+        LocalDateTime now = LocalDateTime.now();
         if (readStatus != null) {
-            readStatus.setLastReadTime(lastReadTime);
+            readStatus.setLastReadTime(now);
+            log.info("更新最后已读时间成功: {}", JSON.toJSONString(readStatus));
             return updateById(readStatus);
         } else {
             // 如果没有记录，则插入新的记录
             readStatus = new ChatMessageRead();
             readStatus.setRoomId(roomId);
             readStatus.setUserId(userId);
-            readStatus.setLastReadTime(lastReadTime);
+            readStatus.setLastReadTime(now);
+            log.info("插入最后已读时间成功: {}", JSON.toJSONString(readStatus));
             return this.save(readStatus);
         }
     }
