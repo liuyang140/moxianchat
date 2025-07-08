@@ -331,12 +331,18 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
             return;
         }
         ChatMessageDTO dto = json.toJavaObject(ChatMessageDTO.class);
+        WsResult result = WsResult.ok(ChatEventTypeEnum.CHAT.getValue(), null);
         if(clientUtils.saveMessages(new UpdateMessageDTO().setChatMessageDTOList(CollUtil.toList(dto)))){
             //消息保存成功
             this.forwardMessage(dto, ctx);
             //推送未读通知
             this.pushUnreadNotification(dto);
+        }else{
+            result = WsResult.fail(ChatEventTypeEnum.CHAT.getValue(), null);
         }
+        result.setTimestamp(dto.getTimestamp());
+        sendWsResult(ctx, result);
+
         // 持久化 + 转发
 //        chatMessageService.saveAndForward(json);
     }
