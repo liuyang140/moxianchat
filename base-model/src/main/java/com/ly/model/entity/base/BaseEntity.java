@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +20,11 @@ public class BaseEntity implements Serializable {
     private Long id;
 
     @TableField("create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @JsonIgnore
     @TableField("update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @JsonIgnore
     @TableLogic
